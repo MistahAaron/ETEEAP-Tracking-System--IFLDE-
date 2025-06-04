@@ -2349,7 +2349,7 @@ app.use((err, req, res, next) => {
 // Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
-  console.log(`📁 MongoDB collections:`);
+  console.log(`📁 MongoDB collections is connected:`);
   console.log(`- Eteeap.Applicants`);
   console.log(`- Eteeap.Assessors`);
   console.log(`- Eteeap.AssessorCounters`);
