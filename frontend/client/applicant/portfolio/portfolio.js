@@ -113,11 +113,47 @@ document.addEventListener("DOMContentLoaded", async function () {
       });
     });
 
+    // Update file input handling
+    document.querySelectorAll(".file-input").forEach((input) => {
+      input.addEventListener("change", async function (event) {
+        event.preventDefault();
+        const files = Array.from(this.files);
+        const section = this.closest(".dropdown-section");
+        const sectionTitle = section.querySelector("h4").textContent.trim();
+        const label = getSectionLabel(sectionTitle);
+
+        // Validate files
+        const validFiles = files.filter((file) => {
+          if (file.size > MAX_FILE_SIZE) {
+            showNotification(`File "${file.name}" exceeds 25MB limit`, "error");
+            return false;
+          }
+          if (!ALLOWED_TYPES.includes(file.type)) {
+            showNotification(
+              `File "${file.name}" type not supported. Use PDF, JPG, PNG, or DOC/DOCX`,
+              "error"
+            );
+            return false;
+          }
+          return true;
+        });
+
+        if (validFiles.length > 0) {
+          await uploadFiles(validFiles, label, section);
+        }
+
+        // Clear input
+        this.value = "";
+      });
+    });
+
     document.querySelectorAll(".upload-btn").forEach((button) => {
       button.addEventListener("click", function (event) {
         event.preventDefault();
         event.stopPropagation();
-        this.closest(".dropdown-section").querySelector(".file-input").click();
+        const fileInput =
+          this.closest(".dropdown-section").querySelector(".file-input");
+        fileInput.click();
       });
     });
 
@@ -215,7 +251,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function fetchAndDisplayFiles() {
     try {
       const userId = localStorage.getItem("userId");
-
       if (!userId) {
         showNotification(
           "User session not found. Please login again.",
@@ -227,22 +262,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
       }
 
-      const response = await fetchWithTimeout(
-        `/api/fetch-user-files/${userId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            credentials: "same-origin",
-          },
-        }
-      );
+      // Update the fetch request
+      const response = await fetch(`/api/fetch-user-files/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // Add Authorization header if you have a token
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        credentials: "include", // Changed from 'same-origin' to 'include'
+      });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error || `HTTP error! status: ${response.status}`
-        );
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -251,21 +283,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         throw new Error(data.error || "Failed to fetch files");
       }
 
-      if (!data.files || Object.keys(data.files).length === 0) {
-        Object.entries(sections).forEach(([label, sectionTitle]) => {
-          const section = findSectionByTitle(sectionTitle);
-          if (section) {
-            const tbody = section.querySelector("tbody");
-            const fileCountSpan = section.querySelector(".file-count");
-            tbody.innerHTML =
-              '<tr><td colspan="5">No files uploaded yet</td></tr>';
-            fileCountSpan.textContent = "0";
-          }
-        });
-        return;
-      }
-
-      // Update each section with its files
+      // Rest of your existing code...
       const sections = {
         "initial-submission": "Initial Submissions",
         resume: "Updated Resume / CV",
@@ -275,54 +293,17 @@ document.addEventListener("DOMContentLoaded", async function () {
         others: "Others",
       };
 
-      function findSectionByTitle(sectionTitle) {
-        const sections = document.querySelectorAll(".dropdown-section");
-        return Array.from(sections).find((section) => {
-          const h4 = section.querySelector("h4");
-          return h4 && h4.textContent.trim() === sectionTitle;
-        });
-      }
-
-      Object.entries(sections).forEach(([label, sectionTitle]) => {
-        const files = data.files[label] || [];
-        const section = findSectionByTitle(sectionTitle);
+      // Update each section
+      Object.entries(sections).forEach(([label, title]) => {
+        const section = findSectionByTitle(title);
         if (section) {
-          const tbody = section.querySelector("tbody");
-          const fileCountSpan = section.querySelector(".file-count");
-
-          // Clear existing rows
-          tbody.innerHTML = "";
-
-          // Add files to table
-          files.forEach((file) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td title="${file.filename}">${file.filename}</td>
-                <td>${file.contentType}</td>
-                <td>${new Date(file.uploadDate).toLocaleDateString()}</td>
-                <td>${file._id}</td>
-                <td class="action-buttons">
-                    <button class="view-btn" data-file-id="${file._id}">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="delete-btn" data-file-id="${file._id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            `;
-            tbody.appendChild(row);
-          });
-
-          // Update file count
-          fileCountSpan.textContent = files.length;
+          const files = data.files?.[label] || [];
+          updateSectionFiles(section, files);
         }
       });
     } catch (error) {
       console.error("Error fetching files:", error);
-      showNotification(
-        `Failed to load files: ${error.message}. Please try again.`,
-        "error"
-      );
+      showNotification("Failed to load files: " + error.message, "error");
     }
   }
 
@@ -569,4 +550,141 @@ document.addEventListener("DOMContentLoaded", async function () {
       showNotification("Error loading file viewer", "error");
     }
   });
+
+  const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
+  const ALLOWED_TYPES = [
+    "application/pdf",
+    "image/jpeg",
+    "image/png",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+
+  function getSectionLabel(sectionTitle) {
+    const labelMap = {
+      "Initial Submissions": "initial-submission",
+      "Updated Resume / CV": "resume",
+      "Certificate of Training": "training",
+      Awards: "awards",
+      "Interview Form": "interview",
+      Others: "others",
+    };
+    return labelMap[sectionTitle] || "others";
+  }
+
+  async function uploadFiles(files, label, section) {
+    try {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        showNotification("Please log in to upload files", "error");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("userId", userId);
+      formData.append("label", label);
+
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+
+      const uploadBtn = section.querySelector(".upload-btn");
+      const originalBtnText = uploadBtn.innerHTML;
+      uploadBtn.innerHTML =
+        '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+      uploadBtn.disabled = true;
+
+      const response = await fetch("/api/submit-documents", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        showNotification("Files uploaded successfully", "success");
+        await fetchAndDisplayFiles(); // Refresh the file list
+      } else {
+        throw new Error(result.error || "Upload failed");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      showNotification(error.message, "error");
+    } finally {
+      const uploadBtn = section.querySelector(".upload-btn");
+      uploadBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+      uploadBtn.disabled = false;
+    }
+  }
+
+  // Add this function before fetchAndDisplayFiles
+  function findSectionByTitle(title) {
+    const sections = document.querySelectorAll(".dropdown-section");
+    for (const section of sections) {
+      const sectionTitle = section.querySelector("h4")?.textContent?.trim();
+      if (sectionTitle === title) {
+        return section;
+      }
+    }
+    console.warn(`Section with title "${title}" not found`);
+    return null;
+  }
+
+  // Add this helper function
+  function updateSectionFiles(section, files) {
+    try {
+      if (!section) {
+        console.error("Section not found");
+        return;
+      }
+
+      const tbody = section.querySelector("tbody");
+      const fileCountSpan = section.querySelector(".file-count");
+
+      if (!tbody || !fileCountSpan) {
+        console.error("Required elements not found in section:", section);
+        return;
+      }
+
+      console.log(`Updating section with ${files.length} files:`, files);
+
+      tbody.innerHTML = files.length
+        ? ""
+        : '<tr><td colspan="5">No files uploaded yet</td></tr>';
+
+      files.forEach((file) => {
+        if (!file._id || !file.filename) {
+          console.error("Invalid file data:", file);
+          return;
+        }
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+                <td title="${file.filename}">${file.filename}</td>
+                <td>${file.contentType || "Unknown"}</td>
+                <td>${new Date(file.uploadDate).toLocaleDateString()}</td>
+                <td>${file._id}</td>
+                <td class="action-buttons">
+                    <button class="view-btn" data-file-id="${file._id}">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="delete-btn" data-file-id="${file._id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+        tbody.appendChild(row);
+      });
+
+      fileCountSpan.textContent = files.length;
+      console.log(`Section updated successfully with ${files.length} files`);
+    } catch (error) {
+      console.error("Error updating section:", error);
+      showNotification("Error updating file list", "error");
+    }
+  }
 });

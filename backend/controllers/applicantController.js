@@ -189,17 +189,39 @@ exports.fileFetch = async (req, res) => {
 exports.fileDelete = async (req, res) => {
   try {
     const fileId = new ObjectId(req.params.id);
+
+    const file = await conn.db.collection("backupFiles.files").findOne({
+      _id: fileId,
+    });
+
+    if (!file) {
+      return res.status(404).json({
+        success: false,
+        error: "File not found",
+      });
+    }
+
     await gfs.delete(fileId);
-    res.json({ success: true, message: "File deleted successfully" });
+
+    res.json({
+      success: true,
+      message: "File deleted successfully",
+    });
   } catch (error) {
     console.error("Error deleting file:", error);
-    res.status(500).json({ error: "Failed to delete file" });
+    res.status(500).json({
+      success: false,
+      error: "Failed to delete file",
+    });
   }
 };
 
+// Update the fileSubmit function
 exports.fileSubmit = async (req, res) => {
   try {
     const userId = req.body.userId;
+    const label = req.body.label || "others"; // Get the label from request
+
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
         success: false,
@@ -225,9 +247,14 @@ exports.fileSubmit = async (req, res) => {
               uploadDate: new Date(),
               originalName: file.originalname,
               size: file.size,
-              label: "initial-submission",
+              label: label, // Use the label from request
               owner: userId,
             },
+          });
+
+          readStream.on("error", (error) => {
+            fs.unlinkSync(file.path);
+            reject(error);
           });
 
           uploadStream.on("error", (error) => {
@@ -242,6 +269,7 @@ exports.fileSubmit = async (req, res) => {
               filename: file.originalname,
               size: file.size,
               contentType: file.mimetype,
+              label: label,
             });
           });
 
@@ -266,6 +294,7 @@ exports.fileSubmit = async (req, res) => {
         }
       });
     }
+
     res.status(500).json({
       success: false,
       error: "File upload failed",
@@ -453,59 +482,42 @@ exports.logout = async (req, res) => {
 exports.fetchUserFiles = async (req, res) => {
   try {
     const userId = req.params.userId;
+    console.log("Fetching files for user:", userId); // Debug log
 
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      console.log("Invalid user ID:", userId); // Debug log
       return res.status(400).json({
         success: false,
         error: "Invalid user ID format",
       });
     }
 
-    // Check if user exists
-    const user = await Applicant.findById(userId);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: "User not found",
-      });
-    }
-
-    // Check if database connection is ready
-    if (!conn.db) {
-      return res.status(500).json({
-        success: false,
-        error: "Database connection not ready",
-      });
-    }
-
     const files = await conn.db
       .collection("backupFiles.files")
-      .find({ "metadata.owner": userId })
+      .find({
+        "metadata.owner": userId,
+      })
       .toArray();
 
-    if (!files || files.length === 0) {
-      return res.json({
-        success: true,
-        files: {},
-        message: "No files found for this user",
-      });
-    }
+    console.log("Files found:", files.length); // Debug log
 
-    // Group files by their labels
     const groupedFiles = files.reduce((acc, file) => {
       const label = file.metadata?.label || "others";
       if (!acc[label]) {
         acc[label] = [];
       }
       acc[label].push({
+        _id: file._id,
         filename: file.filename,
         contentType: file.contentType,
         uploadDate: file.uploadDate,
-        _id: file._id,
+        size: file.metadata?.size,
         label: label,
       });
       return acc;
     }, {});
+
+    console.log("Grouped files:", Object.keys(groupedFiles)); // Debug log
 
     res.json({
       success: true,

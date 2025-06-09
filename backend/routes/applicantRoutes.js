@@ -27,4 +27,6 @@ router.get(
   applicantController.fetchUserFiles
 );
 
+router.delete("/api/delete-documents/:id", applicantController.fileDelete);
+
 module.exports = router;
