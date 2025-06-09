@@ -11,11 +11,7 @@ router.post(
   upload.array("files"),
   applicantController.fileSubmit
 );
-router.get(
-  "/api/fetch-documents",
-  applicantAuthMiddleware,
-  applicantController.fileFetch
-);
+router.get("/api/fetch-documents/:id", applicantController.fileFetch);
 router.get("/api/delete-documents", applicantController.fileDelete);
 router.post("/api/update-personal-info", applicantController.updateInfo);
 router.get(

@@ -16,7 +16,7 @@
             <img src="../img/RTU Logo.png" class="logo1">
             <img src="../img/IFLDE Logo.png" class="logo2">
             <div class="logo-text-container">
-                <h2 class="logo-text">Rizal Technulogical University</h2>
+                <h2 class="logo-text">Rizal Technological University</h2>
                 <p class="logo-subtext">Institute of Flexible Learning & Digital Education</p>
             </div>
             <nav class="nav">
@@ -68,7 +68,6 @@
         <div class="file-count">No. of files:</div>
         <form class="form">
             <hr>
-
             <div class="dropdown-section">
                 <div class="top-section">
                     <h4>Initial Submissions</h4>
@@ -77,20 +76,22 @@
                         <i class="fa-solid fa-chevron-down arrow"></i>
                     </div>
                 </div>
-                <label class="upload-btn hidden" for="file-input-initial">Upload File</label>
-                <input type="file" class="file-input" multiple hidden>
+                <!-- Move table before the upload button -->
                 <table class="file-table hidden">
                     <thead>
                         <tr>
-                            <th>File Name</th>
+                            <th>Filename</th>
                             <th>Type</th>
-                            <th>Date Uploaded</th>
-                            <th>Document ID</th>
+                            <th>Uploaded</th>
+                            <th>File ID</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
+                <!-- Place upload button after the table -->
+                <label class="upload-btn hidden" for="file-input-initial"> <i class="fas fa-plus"></i> Add</label>
+                <input type="file" class="file-input" multiple hidden>
             </div>
             
             <hr>
@@ -103,15 +104,16 @@
                         <i class="fa-solid fa-chevron-down arrow"></i>
                     </div>
                 </div>
-                <button class="upload-btn hidden">Upload File</button>
+                <button class="upload-btn hidden">
+                    <i class="fas fa-plus"></i> Upload</button>
                 <input type="file" class="file-input" multiple hidden>
                 <table class="file-table hidden">
                     <thead>
                         <tr>
-                            <th>File Name</th>
+                            <th>Filename</th>
                             <th>Type</th>
-                            <th>Date Uploaded</th>
-                            <th>Document ID</th>
+                            <th>Uploaded</th>
+                            <th>File ID</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -127,15 +129,15 @@
                         <i class="fa-solid fa-chevron-down arrow"></i>
                     </div>
                 </div>
-                <button class="upload-btn hidden">Upload File</button>
+                <button class="upload-btn hidden">Upload</button>
                 <input type="file" class="file-input" multiple hidden>
                 <table class="file-table hidden">
                     <thead>
                         <tr>
-                            <th>File Name</th>
+                            <th>Filename</th>
                             <th>Type</th>
-                            <th>Date Uploaded</th>
-                            <th>Document ID</th>
+                            <th>Uploaded</th>
+                            <th>File ID</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -151,15 +153,15 @@
                         <i class="fa-solid fa-chevron-down arrow"></i>
                     </div>
                 </div>
-                <button class="upload-btn hidden">Upload File</button>
+                <button class="upload-btn hidden">Upload</button>
                 <input type="file" class="file-input" multiple hidden>
                 <table class="file-table hidden">
                     <thead>
                         <tr>
-                            <th>File Name</th>
+                            <th>Filename</th>
                             <th>Type</th>
-                            <th>Date Uploaded</th>
-                            <th>Document ID</th>
+                            <th>Uploaded</th>
+                            <th>File ID</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -175,15 +177,15 @@
                         <i class="fa-solid fa-chevron-down arrow"></i>
                     </div>
                 </div>
-                <button class="upload-btn hidden">Upload File</button>
+                <button class="upload-btn hidden"> <i class="fa-solid-plus"></i>Upload</button>
                 <input type="file" class="file-input" multiple hidden>
                 <table class="file-table hidden">
                     <thead>
                         <tr>
-                            <th>File Name</th>
+                            <th>Filename</th>
                             <th>Type</th>
-                            <th>Date Uploaded</th>
-                            <th>Document ID</th>
+                            <th>Uploaded</th>
+                            <th>File ID</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -199,15 +201,15 @@
                         <i class="fa-solid fa-chevron-down arrow"></i>
                     </div>
                 </div>
-                <button class="upload-btn hidden">Upload File</button>
+                <button class="upload-btn hidden">Upload</button>
                 <input type="file" class="file-input" multiple hidden>
                 <table class="file-table hidden">
                     <thead>
                         <tr>
-                            <th>File Name</th>
+                            <th>Filename</th>
                             <th>Type</th>
-                            <th>Date Uploaded</th>
-                            <th>Document ID</th>
+                            <th>Uploaded</th>
+                            <th>File ID</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -218,10 +220,30 @@
             <h5>You may submit your complete portfolio once your initial screening is approved.</h5>
         </form>
     </div>
-              
+
+    
+                  <div class="modal" id="fileModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <button class="slider-btn prev-btn">&lt;</button>
+                <div class="file-viewer">
+                    <iframe id="fileViewer" frameborder="0"></iframe>
+                    <img id="imageViewer" alt="File preview">
+                </div>
+                <button class="slider-btn next-btn">&gt;</button>
+            </div>
+            <div class="file-info">
+                <span id="currentFileText">File 1 of 1</span>
+                <span id="fileName">filename.ext</span>
+            </div>
+        </div>
+    </div>
     
   <div class="notification" id="notification" style="display: none;"></div>
 
     <script src="portfolio.js"></script>
+
+
 </body>
 </html>

@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", async function () {
+  // Initialize the file viewer immediately
+  initializeFileViewer();
+
   try {
     // Check authentication status
     const authResponse = await fetch("/applicant/auth-status");
@@ -133,10 +136,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                     <td>${new Date().toLocaleDateString()}</td>
                     <td>${documentId}</td>
                     <td>
-                        <button class="view-btn" data-file-url="${URL.createObjectURL(
+                        <button class="view-btn"(
                           file
-                        )}">View</button>
-                        <button class="delete-btn">Delete</button>
+                        )}">
+                        <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="delete-btn"> <i class="fas fa-trash"></i></button>
                     </td>
                 `;
           fileTableBody.appendChild(row);
@@ -156,8 +161,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
 
       if (event.target.classList.contains("view-btn")) {
-        const fileUrl = event.target.getAttribute("data-file-url");
-        window.open(fileUrl, "_blank");
       }
     });
 
@@ -294,18 +297,18 @@ document.addEventListener("DOMContentLoaded", async function () {
           files.forEach((file) => {
             const row = document.createElement("tr");
             row.innerHTML = `
-              <td title="${file.filename}">${file.filename}</td>
-              <td>${file.contentType}</td>
-              <td>${new Date(file.uploadDate).toLocaleDateString()}</td>
-              <td>${file._id}</td>
-              <td>
-                  <button class="view-btn" data-file-id="${
-                    file._id
-                  }">View</button>
-                  <button class="delete-btn" data-file-id="${
-                    file._id
-                  }">Delete</button>
-              </td>
+                <td title="${file.filename}">${file.filename}</td>
+                <td>${file.contentType}</td>
+                <td>${new Date(file.uploadDate).toLocaleDateString()}</td>
+                <td>${file._id}</td>
+                <td class="action-buttons">
+                    <button class="view-btn" data-file-id="${file._id}">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="delete-btn" data-file-id="${file._id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
             `;
             tbody.appendChild(row);
           });
@@ -357,4 +360,213 @@ document.addEventListener("DOMContentLoaded", async function () {
       throw error;
     }
   }
+
+  let currentFiles = [];
+  let currentFileIndex = 0;
+
+  // Replace the existing initializeFileViewer function
+  function initializeFileViewer() {
+    const modal = document.getElementById("fileModal");
+    const closeBtn = document.querySelector(".close-modal");
+    const prevBtn = document.querySelector(".prev-btn");
+    const nextBtn = document.querySelector(".next-btn");
+    const fileViewer = document.getElementById("fileViewer");
+    const imageViewer = document.getElementById("imageViewer");
+
+    function closeModal() {
+      if (modal) {
+        modal.style.display = "none";
+        if (fileViewer) fileViewer.src = "";
+        if (imageViewer) imageViewer.style.display = "none";
+        currentFiles = [];
+        currentFileIndex = 0;
+      }
+    }
+
+    // Close button event
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeModal();
+      });
+    }
+
+    // Click outside modal to close
+    document.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Navigation buttons
+    if (prevBtn) {
+      prevBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (currentFileIndex > 0) {
+          showFile(currentFileIndex - 1);
+        }
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (currentFileIndex < currentFiles.length - 1) {
+          showFile(currentFileIndex + 1);
+        }
+      });
+    }
+
+    // Keyboard navigation
+    document.addEventListener("keydown", function (e) {
+      if (modal && modal.style.display === "block") {
+        if (e.key === "ArrowLeft" && currentFileIndex > 0) {
+          showFile(currentFileIndex - 1);
+        }
+        if (
+          e.key === "ArrowRight" &&
+          currentFileIndex < currentFiles.length - 1
+        ) {
+          showFile(currentFileIndex + 1);
+        }
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      }
+    });
+  }
+
+  async function viewFile(fileId, sectionFiles) {
+    try {
+      if (!fileId || !sectionFiles || !sectionFiles.length) {
+        throw new Error("Invalid file data");
+      }
+
+      currentFiles = sectionFiles;
+      currentFileIndex = currentFiles.findIndex((file) => file._id === fileId);
+
+      if (currentFileIndex === -1) {
+        throw new Error("File not found in section");
+      }
+
+      const modal = document.getElementById("fileModal");
+      if (!modal) {
+        throw new Error("Modal element not found");
+      }
+
+      modal.style.display = "block";
+      await showFile(currentFileIndex);
+    } catch (error) {
+      console.error("Error viewing file:", error);
+      showNotification("Error loading file: " + error.message, "error");
+    }
+  }
+
+  async function showFile(index) {
+    try {
+      if (index < 0 || index >= currentFiles.length) return;
+
+      currentFileIndex = index;
+      const file = currentFiles[index];
+
+      // Update navigation buttons
+      const prevBtn = document.querySelector(".prev-btn");
+      const nextBtn = document.querySelector(".next-btn");
+
+      if (prevBtn) {
+        prevBtn.disabled = index === 0;
+        prevBtn.style.opacity = index === 0 ? "0.5" : "1";
+      }
+      if (nextBtn) {
+        nextBtn.disabled = index === currentFiles.length - 1;
+        nextBtn.style.opacity = index === currentFiles.length - 1 ? "0.5" : "1";
+      }
+
+      // Update file info
+      const currentFileText = document.getElementById("currentFileText");
+      const fileName = document.getElementById("fileName");
+
+      if (currentFileText) {
+        currentFileText.textContent = `File ${index + 1} of ${
+          currentFiles.length
+        }`;
+      }
+      if (fileName) {
+        fileName.textContent = file.filename;
+      }
+
+      const response = await fetch(`/api/fetch-documents/${file._id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      const fileViewer = document.getElementById("fileViewer");
+      const imageViewer = document.getElementById("imageViewer");
+
+      // Reset viewers
+      if (fileViewer) {
+        fileViewer.style.display = "none";
+        fileViewer.src = "";
+      }
+      if (imageViewer) {
+        imageViewer.style.display = "none";
+        imageViewer.src = "";
+      }
+
+      // Display appropriate viewer based on file type
+      if (file.contentType.startsWith("image/")) {
+        if (imageViewer) {
+          imageViewer.src = url;
+          imageViewer.style.display = "block";
+        }
+      } else if (file.contentType === "application/pdf") {
+        if (fileViewer) {
+          fileViewer.src = url;
+          fileViewer.style.display = "block";
+        }
+      } else {
+        showNotification("File type not supported for preview", "info");
+      }
+    } catch (error) {
+      console.error("Error displaying file:", error);
+      showNotification("Error loading file: " + error.message, "error");
+    }
+  }
+
+  // Update the event listener for view buttons
+  document.addEventListener("click", async function (event) {
+    const viewBtn = event.target.closest(".view-btn");
+    if (!viewBtn) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    try {
+      const fileId = viewBtn.getAttribute("data-file-id");
+      const section = viewBtn.closest(".dropdown-section");
+
+      if (!section || !fileId) {
+        throw new Error("Invalid file or section");
+      }
+
+      const sectionFiles = Array.from(section.querySelectorAll("tbody tr")).map(
+        (row) => ({
+          _id: row.querySelector(".view-btn").getAttribute("data-file-id"),
+          filename: row.querySelector("td:first-child").textContent,
+          contentType: row.querySelector("td:nth-child(2)").textContent,
+        })
+      );
+
+      await viewFile(fileId, sectionFiles);
+    } catch (error) {
+      console.error("Error handling view button click:", error);
+      showNotification("Error loading file viewer", "error");
+    }
+  });
 });

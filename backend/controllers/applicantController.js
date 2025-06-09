@@ -156,31 +156,30 @@ exports.login = async (req, res) => {
   }
 };
 
+// Update the fileFetch function
 exports.fileFetch = async (req, res) => {
   try {
-    const userId = req.body.userId;
-    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({
-        success: false,
-        error: "Invalid userId format",
-      });
-    }
-
     const fileId = new ObjectId(req.params.id);
-    const file = await conn.db
-      .collection("backupFiles.files")
-      .find({ _id: fileId, "metadata.owner": userId })
-      .toArray();
+
+    const file = await conn.db.collection("backupFiles.files").findOne({
+      _id: fileId,
+    });
 
     if (!file) {
       return res.status(404).json({ error: "File not found" });
     }
 
+    const downloadStream = gfs.openDownloadStream(fileId);
+
     res.set("Content-Type", file.contentType);
     res.set("Content-Disposition", `inline; filename="${file.filename}"`);
 
-    const downloadStream = gfs.openDownloadStream(fileId);
     downloadStream.pipe(res);
+
+    downloadStream.on("error", (error) => {
+      console.error("Error streaming file:", error);
+      res.status(500).json({ error: "Error streaming file" });
+    });
   } catch (error) {
     console.error("Error serving file:", error);
     res.status(500).json({ error: "Failed to serve file" });
