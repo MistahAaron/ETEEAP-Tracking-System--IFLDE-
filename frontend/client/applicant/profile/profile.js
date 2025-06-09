@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded", async function () {
-  loadProfilePicture();
-  await setupProfilePicUpload();
-
   try {
     // Check authentication status
     const authResponse = await fetch("/applicant/auth-status");
@@ -15,6 +12,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     // If authenticated, use the user data from auth response
     if (authData.user) {
       console.log("User data from auth:", authData.user);
+      await setupProfilePicUpload();
+      loadProfilePicture();
       populateProfile(authData.user);
       setupEventListeners();
     } else {
@@ -46,10 +45,17 @@ function populateProfile(userData) {
     return;
   }
 
-  console.log("Populating profile with:", userData);
-
-  // Check if personalInfo exists or use the root object
   const personalInfo = userData.personalInfo || userData;
+
+  // Update profile name in navigation
+  const navProfileName = document.getElementById("nav-profile-name");
+  if (navProfileName) {
+    const nameParts = [personalInfo.firstname, personalInfo.lastname];
+    const displayName = nameParts
+      .filter((part) => part && part.trim())
+      .join(" ");
+    navProfileName.innerText = displayName || "Applicant";
+  }
 
   // Update profile header
   const nameElement = document.getElementById("user-name");
@@ -504,12 +510,18 @@ async function loadProfilePicture() {
   const userId = localStorage.getItem("userId");
   if (!userId) return;
 
-  const profilePic = document.querySelector(".profile-pic");
   try {
     const response = await fetch(`/api/profile-pic/${userId}`);
     if (response.ok) {
       const blob = await response.blob();
-      profilePic.src = URL.createObjectURL(blob);
+      const imageUrl = URL.createObjectURL(blob);
+
+      // Update both profile pictures
+      const profilePic = document.querySelector(".profile-pic");
+      const navProfilePic = document.getElementById("nav-profile-pic");
+
+      if (profilePic) profilePic.src = imageUrl;
+      if (navProfilePic) navProfilePic.src = imageUrl;
     }
   } catch (error) {
     console.error("Error loading profile picture:", error);
@@ -519,6 +531,7 @@ async function loadProfilePicture() {
 function setupProfilePicUpload() {
   const profilePicUpload = document.querySelector(".profile-pic-upload");
   const profilePic = document.querySelector(".profile-pic");
+  const navProfilePic = document.getElementById("nav-profile-pic");
 
   if (profilePicUpload) {
     profilePicUpload.addEventListener("change", function (event) {
@@ -526,7 +539,9 @@ function setupProfilePicUpload() {
       if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
-          profilePic.src = e.target.result;
+          // Update both profile pictures
+          if (profilePic) profilePic.src = e.target.result;
+          if (navProfilePic) navProfilePic.src = e.target.result;
         };
         reader.readAsDataURL(file);
       }

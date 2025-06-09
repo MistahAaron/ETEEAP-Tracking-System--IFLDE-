@@ -1,0 +1,34 @@
+#nav-profile-name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-profile-pic {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  border: 2px solid; /* Add transparent border */
+  transition: all 0.3s ease; /* Add smooth transition */
+}
+
+.nav-profile-pic:hover {
+  transform: scale(1.1); /* Slightly increase size */
+  box-shadow: 0 0 15px rgba(83, 41, 137, 0.7); /* Glow effect using main color */
+  border-color: var(--main-color); /* Border appears on hover */
+  cursor: pointer;
+}
+
+.nav-profile-pic:active {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(83, 41, 137, 0.5);
+}
+
+.profile.dropdown .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+}
