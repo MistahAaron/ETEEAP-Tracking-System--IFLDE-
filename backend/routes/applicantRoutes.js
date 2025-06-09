@@ -29,4 +29,12 @@ router.get(
 
 router.delete("/api/delete-documents/:id", applicantController.fileDelete);
 
+router.post(
+  "/api/update-profile",
+  upload.single("profilePic"),
+  applicantController.updateProfile
+);
+
+router.get("/api/profile-pic/:userId", applicantController.getProfilePic);
+
 module.exports = router;

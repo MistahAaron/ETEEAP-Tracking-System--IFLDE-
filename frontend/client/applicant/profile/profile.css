@@ -418,3 +418,29 @@ body {
 .iti__flag-container {
   width: 40px; /* Make the dropdown smaller */
 }
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.notification.success {
+  background-color: #4caf50;
+}
+.notification.error {
+  background-color: #f44336;
+}
+.notification.warning {
+  background-color: #ff9800;
+}
+.notification.info {
+  background-color: #2196f3;
+}

@@ -532,3 +532,92 @@ exports.fetchUserFiles = async (req, res) => {
     });
   }
 };
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const updateData = JSON.parse(req.body.data);
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ success: false, error: "Invalid user ID" });
+    }
+
+    // Handle profile picture upload if present
+    if (req.file) {
+      const uploadStream = gfs.openUploadStream("profile-pic-" + userId, {
+        contentType: req.file.mimetype,
+        metadata: {
+          userId: userId,
+          type: "profile-pic",
+        },
+      });
+
+      // Delete old profile picture if exists
+      const oldPic = await conn.db.collection("backupFiles.files").findOne({
+        "metadata.userId": userId,
+        "metadata.type": "profile-pic",
+      });
+
+      if (oldPic) {
+        await gfs.delete(oldPic._id);
+      }
+
+      // Upload new picture
+      fs.createReadStream(req.file.path)
+        .pipe(uploadStream)
+        .on("error", (error) => {
+          console.error("Error uploading profile pic:", error);
+        })
+        .on("finish", () => {
+          fs.unlinkSync(req.file.path);
+        });
+
+      updateData.profilePicId = uploadStream.id;
+    }
+
+    // Update user data
+    const result = await Applicant.findByIdAndUpdate(
+      userId,
+      { $set: updateData },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      user: result,
+    });
+  } catch (error) {
+    console.error("Profile update error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to update profile",
+    });
+  }
+};
+
+exports.getProfilePic = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const file = await conn.db.collection("backupFiles.files").findOne({
+      "metadata.userId": userId,
+      "metadata.type": "profile-pic",
+    });
+
+    if (!file) {
+      return res.status(404).send("No profile picture found");
+    }
+
+    const downloadStream = gfs.openDownloadStream(file._id);
+    res.set("Content-Type", file.contentType);
+    downloadStream.pipe(res);
+  } catch (error) {
+    console.error("Error serving profile pic:", error);
+    res.status(500).send("Error retrieving profile picture");
+  }
+};
