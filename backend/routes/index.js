@@ -7,28 +7,17 @@ const adminRoutes = require("./adminRoutes");
 
 const router = express.Router();
 
-router.use(express.static(path.join(__dirname, "../../frontend")));
-router.use(express.static(path.join(__dirname, "../../frontend/client")));
-router.use(
-  express.static(path.join(__dirname, "../../frontend/client/applicant"))
-);
-router.use(
-  express.static(path.join(__dirname, "../../frontend/client/applicant/home"))
-);
-router.use(
-  express.static(path.join(__dirname, "../../frontend/client/applicant/login"))
-);
+router.use(express.static("../../frontend"));
+router.use(express.static("../../frontend/client"));
+router.use(express.static("../../frontend/client/applicant"));
+router.use(express.static("../../frontend/client/applicant/home"));
+router.use(express.static("../../frontend/client/applicant/login"));
 
 router.get("/", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/client/applicant/home/index.html")
-  );
+  res.sendFile("../../frontend/client/applicant/home/index.html");
 });
-
 router.get("/applicant-login", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/client/applicant/login/login.html")
-  );
+  res.sendFile("../../frontend/client/applicant/login/login.html");
 });
 
 router.get("/documents/:filename", (req, res) => {
