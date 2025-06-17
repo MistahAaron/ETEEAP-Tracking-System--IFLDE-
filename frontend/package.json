@@ -6,8 +6,8 @@
   "author": "Capstone Intellects",
   "type": "commonjs",
   "scripts": {
-    "start": "serve -s .p $PORT",
-    "dev": "serve -s .p 8080"
+    "start": "serve -s frontend/client/applicant/home .p $PORT",
+    "dev": "serve -s frontend/client/applicant/home  .p 8080"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
