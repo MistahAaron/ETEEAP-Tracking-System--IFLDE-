@@ -7,7 +7,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "serve -s frontend -l $PORT",
-    "dev": "serve -s frontend -l 8081"
+    "dev": "serve -s frontend -l 3000"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
