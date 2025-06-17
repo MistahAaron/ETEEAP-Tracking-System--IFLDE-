@@ -1,37 +1,34 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const applicantRoutes = require("./applicantRoutes");
+const assessorRoutes = require("./assessorRoutes");
+const adminRoutes = require("./adminRoutes");
 
 const router = express.Router();
 
-// Single static directory declaration (adjust the path as needed)
-const staticDir = path.join(__dirname, "../../frontend/client");
-router.use(express.static(staticDir));
+router.use(express.static(path.join(__dirname, "../../frontend")));
+router.use(express.static(path.join(__dirname, "../../frontend/client")));
+router.use(
+  express.static(path.join(__dirname, "../../frontend/client/applicant"))
+);
+router.use(
+  express.static(path.join(__dirname, "../../frontend/client/applicant/home"))
+);
+router.use(
+  express.static(path.join(__dirname, "../../frontend/client/applicant/login"))
+);
 
-// Route handlers
 router.get("/", (req, res) => {
-  const filePath = path.join(staticDir, "applicant/home/index.html");
-
-  // Verify file exists before sending
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      console.error(`File not found: ${filePath}`);
-      return res.status(404).send("File not found");
-    }
-    res.sendFile(filePath);
-  });
+  res.sendFile(
+    path.join(__dirname, "../../frontend/client/applicant/home/index.html")
+  );
 });
 
 router.get("/applicant-login", (req, res) => {
-  const filePath = path.join(staticDir, "applicant/login/login.html");
-
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      console.error(`File not found: ${filePath}`);
-      return res.status(404).send("File not found");
-    }
-    res.sendFile(filePath);
-  });
+  res.sendFile(
+    path.join(__dirname, "../../frontend/client/applicant/login/login.html")
+  );
 });
 
 router.get("/documents/:filename", (req, res) => {
