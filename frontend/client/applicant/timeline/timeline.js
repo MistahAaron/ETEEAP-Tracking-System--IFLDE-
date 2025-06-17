@@ -113,6 +113,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Initialize the timeline
   fetchApplicantStatus();
 });
