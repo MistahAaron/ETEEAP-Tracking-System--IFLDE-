@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "start": "serve -s build",
+    "start": "serve -s frontend",
     "dev": "serve -s ."
   },
   "dependencies": {
