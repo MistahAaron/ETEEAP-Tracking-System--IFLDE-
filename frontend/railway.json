@@ -1,6 +1,6 @@
 {
   "build": {
-    "output": "dist",
+    "output": "client",
     "command": "npm run build"
   },
   "deploy": {
