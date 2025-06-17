@@ -6,7 +6,7 @@
   "author": "Capstone Intellects",
   "type": "commonjs",
   "scripts": {
-    "start": "serve -s frontend -l $PORT",
+    "start": "npm run build && npx serve -s frontend -l $PORT",
     "build": "echo 'No build step required'"
   },
   "dependencies": {
