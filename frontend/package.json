@@ -7,7 +7,6 @@
   "type": "commonjs",
   "scripts": {
     "start": "serve -s frontend -l $PORT",
-    "build": "cd frontend && npm run build",
     "dev": "serve -s frontend"
   },
   "dependencies": {
