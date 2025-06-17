@@ -6,8 +6,8 @@
   "author": "Capstone Intellects",
   "type": "commonjs",
   "scripts": {
-    "start": "serve -s frontend -l $PORT",
-    "dev": "serve -s frontend -l 3000"
+    "start": "serve -s . -l $PORT",
+    "dev": "serve -s . -l 3000"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
