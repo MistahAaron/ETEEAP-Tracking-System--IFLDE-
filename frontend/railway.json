@@ -1,9 +1,13 @@
 {
+  "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "output": "frontend",
-    "command": "npm install"
+    "builder": "NIXPACKS"
   },
   "deploy": {
-    "start": "npm run start"
+    "numReplicas": 1,
+    "startCommand": "npm start",
+    "sleepApplication": false,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
   }
 }

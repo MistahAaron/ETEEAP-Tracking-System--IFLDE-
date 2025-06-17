@@ -27,8 +27,8 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
-      "https://eteeap-tracking-system-iflde-production-610d.up.railway.app",
-      "https://dependable-flow-production.up.railway.app",
+      "https://eteeap-tracking-system-iflde-production-88e8.up.railway.app",
+      "https://eteeapfrontend-production.up.railway.app/,
       "http://localhost",
     ], // or your frontend URL
     credentials: true,

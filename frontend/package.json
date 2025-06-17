@@ -7,7 +7,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "serve -s frontend -l $PORT",
-    "dev": "serve -s frontend -l 3000"
+    "build": "echo 'No build step required'"
   },
   "dependencies": {
     "serve": "^14.2.4"
