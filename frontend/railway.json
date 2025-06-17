@@ -1,6 +1,6 @@
 {
   "build": {
-    "output": "frontend/client/applicant/home",
+    "output": "frontend",
     "command": "npm install"
   },
   "deploy": {
