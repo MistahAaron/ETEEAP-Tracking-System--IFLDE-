@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "start": "serve -s frontend",
+    "start": "serve -s frontend -l 8080",
     "dev": "serve -s frontend"
   },
   "dependencies": {
