@@ -1,7 +1,6 @@
 {
   "build": {
-    "output": "frontend/client",
-    "command": "npm install && npm run build"
+    "command": "npm install"
   },
   "deploy": {
     "start": "npm run start"
