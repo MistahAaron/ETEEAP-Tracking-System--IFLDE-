@@ -26,7 +26,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost", // or your frontend URL
+    origin: [
+      "https://eteeap-tracking-system-iflde-production-610d.up.railway.app",
+      "http://localhost",
+    ], // or your frontend URL
     credentials: true,
     exposedHeaders: ["set-cookie"],
   })
