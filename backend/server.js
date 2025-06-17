@@ -27,7 +27,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
-      "https://eteeap-tracking-system-iflde-production-88e8.up.railway.app/",
+      "https://eteeap-tracking-system-iflde-production-610d.up.railway.app",
       "http://localhost",
     ], // or your frontend URL
     credentials: true,
@@ -37,7 +37,7 @@ app.use(
 app.use(bodyParser.json());
 
 // Serve static files
-app.use(express.static("frontend"));
+app.use(express.static(path.join(__dirname, "frontend")));
 
 connectDB();
 
