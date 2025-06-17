@@ -1,0 +1,9 @@
+[phases]
+setup = "npm install"
+build = "npm run build"  # Only if you have a build step
+
+[start]
+cmd = "npm run start"
+
+[build]
+outputDir = "frontend"  # Or your output directory
