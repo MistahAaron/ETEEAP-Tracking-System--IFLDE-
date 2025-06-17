@@ -1,0 +1,9 @@
+{
+  "build": {
+    "output": "dist",
+    "command": "npm run build"
+  },
+  "deploy": {
+    "start": "npm run start"
+  }
+}
