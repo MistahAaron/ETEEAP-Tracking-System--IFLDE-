@@ -1,6 +1,6 @@
 {
   "build": {
-    "output": "frontend",
+    "output": "./frontend",
     "command": "npm install"
   },
   "deploy": {
