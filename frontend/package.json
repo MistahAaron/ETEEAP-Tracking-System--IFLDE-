@@ -8,7 +8,7 @@
   "main": "server.js",
   "scripts": {
     "start": "serve -s frontend",
-    "dev": "serve -s ."
+    "dev": "serve -s frontend"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
