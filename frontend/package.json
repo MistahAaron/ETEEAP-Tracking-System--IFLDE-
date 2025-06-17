@@ -7,8 +7,8 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "serve -s build",
+    "dev": "serve -s ."
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
