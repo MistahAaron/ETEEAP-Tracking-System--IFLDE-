@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const applicantSchema = new mongoose.Schema({
   applicantId: {
@@ -10,12 +11,15 @@ const applicantSchema = new mongoose.Schema({
     type: String, 
     required: true, 
     unique: true,
+    trim: true,
+    lowercase: true,
     match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
   },
   password: { 
     type: String, 
     required: true,
-    minlength: 8
+    minlength: 8,
+    select: false // Never returned in queries
   },
   status: { 
     type: String, 
@@ -144,16 +148,36 @@ const applicantSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-}],
+  }]
+}, { 
+  collection: "Applicants",
+  timestamps: true // Replaces manual createdAt/updatedAt
+});
 
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
-  },
-  updatedAt: { 
-    type: Date, 
-    default: Date.now 
+// Password hashing middleware
+applicantSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
   }
-}, { collection: "Applicants" });
+});
+
+// Password comparison method
+applicantSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Remove sensitive data when converting to JSON
+applicantSchema.methods.toJSON = function() {
+  const obj = this.toObject();
+  delete obj.password;
+  delete obj.__v;
+  return obj;
+};
 
 module.exports = mongoose.model("Applicant", applicantSchema);
