@@ -45,7 +45,7 @@ async function loadApplicantData(applicantId) {
     });
     
     if (!authResponse.ok) {
-      window.location.href = '/client/assessor/login/login.html'
+      window.location.href = 'login/login.html'
 ;
       return;
     }

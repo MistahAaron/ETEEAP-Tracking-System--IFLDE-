@@ -8,9 +8,8 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <link rel="icon" type="image/x-icon" href="../img/RTU Logo.png">
-    
-
+    <link rel="icon" type="image/x-icon" href="../img/RTU Logo.png">
+</head>
 <body>
     <header>
         <div class="logo-container">
@@ -33,18 +32,27 @@
     </header>
 
     <div class="wrapper">
+        <!-- Role Selection -->
+        <div class="form-box role-selection">
+            <h2>Select Your Role</h2>
+            <div class="role-buttons">
+                <button class="btn role-btn" data-role="applicant">Applicant</button>
+                <button class="btn role-btn" data-role="admin">Administrator</button>
+                <button class="btn role-btn" data-role="assessor">Assessor</button>
+            </div>
+        </div>
     
-        <!-- Login Form -->
-        <div class="form-box login">
-            <h2>Login</h2>
-            <form id="loginForm">
+        <!-- Applicant Login Form -->
+        <div class="form-box login applicant-form">
+            <h2>Applicant Login</h2>
+            <form id="applicantLoginForm">
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="email" id="loginEmail" required>
+                    <input type="email" id="applicantEmail" required>
                     <label>Email</label>
                 </div>
                 <div class="input-box">
-                    <input type="password" id="loginPassword" required> <!-- Corrected type -->
+                    <input type="password" id="applicantPassword" required>
                     <label>Password</label>
                     <span class="toggle-password">
                         <ion-icon name="eye-off"></ion-icon>
@@ -66,9 +74,54 @@
             </form>
         </div>
     
+        <!-- Admin Login Form -->
+        <div class="form-box login admin-form">
+            <h2>Admin Login</h2>
+            <form id="adminLoginForm">
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                    <input type="email" id="adminEmail" required>
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <input type="password" id="adminPassword" required>
+                    <label>Password</label>
+                    <span class="toggle-password">
+                        <ion-icon name="eye-off"></ion-icon>
+                    </span>
+                </div>
+                <div class="remember-me">
+                    <label><input type="checkbox" id="rememberMe"> Remember me</label>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <div id="admin-error-message" class="error-message"></div>
+            </form>
+        </div>
+    
+        <!-- Assessor Login Form -->
+        <div class="form-box login assessor-form">
+            <h2>Assessor Login</h2>
+            <form id="assessorLoginForm">
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                    <input type="email" id="assessorEmail" required>
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <input type="password" id="assessorPassword" required>
+                    <label>Password</label>
+                    <span class="toggle-password">
+                        <ion-icon name="eye-off"></ion-icon>
+                    </span>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <div id="assessor-error-message" class="error-message"></div>
+            </form>
+        </div>
+    
         <!-- Registration Form -->
         <div class="form-box register">
-            <h2>Registration</h2>
+            <h2>Applicant Registration</h2>
             <form id="registerForm">
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail"></ion-icon></span>
@@ -93,12 +146,6 @@
                     <label><input type="checkbox" id="terms-checkbox"> I agree to the <a href="#" id="terms-link">terms & conditions</a></label>
                 </div>
                 <button type="submit" id="register-btn" class="btn">Register</button>
-                <div class="google-btn">
-                    <button type="button" class="btn google">
-                        <img src="../img/Google Logo.png" alt="Google Logo">
-                        Continue with Google
-                    </button>
-                </div>
                 <div class="login-register">
                     <p>Already have an account? <a href="#" class="login-link">Login</a></p>
                 </div>
@@ -156,14 +203,14 @@
             <h2>New Password</h2>
             <form id="newPasswordSubmit">
                 <div class="input-box">
-                    <input type="password" id="newpassword" required> <!-- Corrected type -->
+                    <input type="password" id="newpassword" required>
                     <label>Enter New Password</label>
                     <span class="toggle-password">
                         <ion-icon name="eye-off"></ion-icon>
                     </span>
                 </div>
                 <div class="input-box">
-                    <input type="password" id="confirmNewPassword" required> <!-- Corrected type -->
+                    <input type="password" id="confirmNewPassword" required>
                     <label>Confirm Password</label>
                     <span class="toggle-password">
                         <ion-icon name="eye-off"></ion-icon>

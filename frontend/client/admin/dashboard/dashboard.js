@@ -423,7 +423,7 @@ async function handleLogout() {
 }
 
 function redirectToLogin() {
-  window.location.href = "/client/admin/login/login.html";
+  window.location.href = "/login/login.html";
 }
 
 function clearAuthData() {

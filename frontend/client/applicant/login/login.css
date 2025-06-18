@@ -14,10 +14,17 @@ body {
   background-size: cover;
 }
 
+/* Form visibility control */
+
+
+.role-selection {
+    display: block;
+}
+
 /* Navigation */
 header {
   width: 100%;
-  background-color: #dfd9ec;
+  background-color: #e2e1e6;
   padding: 15px 40px;
   display: flex;
   justify-content: space-between;
@@ -188,15 +195,16 @@ header {
 
 /* Register Form */
 .wrapper .form-box.register {
-  position: absolute;
-  transform: translateX(400px);
-  opacity: 0;
+    position: absolute;
+    transform: translateX(400px);
+    opacity: 0;
+    display: block; /* Add this */
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .wrapper.active .form-box.register {
-  transition: transform 0.18s ease;
-  transform: translateX(0);
-  opacity: 1;
+    transform: translateX(0);
+    opacity: 1;
 }
 
 /* Forgot Account Form */
@@ -667,4 +675,114 @@ input::-ms-clear {
 }
 .notification.info {
   background-color: #2196f3;
+}
+
+/* Role Selection Styles */
+.role-selection h2 {
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.role-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.role-btn {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.role-btn:hover {
+  background: rgba(83, 41, 137, 0.8);
+  color: #fff;
+  border-color: #532989;
+}
+
+/* Back button styles */
+.back-btn {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Error message styles */
+.error-message {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  text-align: center;
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  header {
+    padding: 15px 20px;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
+  }
+
+  .logo-subtext {
+    font-size: 0.8rem;
+  }
+
+  .nav ul li {
+    margin-right: 20px;
+  }
+
+  .nav ul li a {
+    font-size: 1rem;
+  }
+
+  .wrapper {
+    width: 90%;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 576px) {
+  header {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .logo-container {
+    margin-bottom: 10px;
+  }
+
+  .nav {
+    width: 100%;
+  }
+
+  .nav ul {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .nav ul li {
+    margin-right: 0;
+  }
+
+  .wrapper {
+    padding: 20px;
+  }
+
+  .form-box {
+    padding: 30px;
+  }
 }

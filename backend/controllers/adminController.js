@@ -84,7 +84,7 @@ exports.createAdmin = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Admin registration successful. Please login.",
-      redirectTo: "/client/admin/login/login.html",
+      redirectTo: "/login/login.html",
       data: {
         email: newAdmin.email,
         fullName: newAdmin.fullName,
