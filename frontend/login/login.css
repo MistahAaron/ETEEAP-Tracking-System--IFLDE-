@@ -1,0 +1,423 @@
+   * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: linear-gradient(to top, #532989, #dfd9ece5),
+                  url("../img/background.jpg") no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    /* Header Styles */
+    header {
+      width: 100%;
+      background-color: #dfd9ec;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      z-index: 999;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo1 {
+      width: 55px;
+    }
+
+    .logo2 {
+      width: 60px;
+    }
+
+    .logo-text-container {
+      text-align: left;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
+      color: #002ab4;
+    }
+
+    .logo-subtext {
+      font-size: 0.9rem;
+      color: #532989;
+    }
+
+    .nav ul {
+      list-style-type: none;
+      display: flex;
+      padding: 10px 0;
+      justify-content: center;
+    }
+
+    .nav ul li {
+      display: inline;
+      position: relative;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      margin-right: 40px;
+    }
+
+    .nav ul li a {
+      color: #532989;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding: 10px;
+      position: relative;
+    }
+
+    .nav a:after {
+      content: "";
+      position: absolute;
+      background-color: #532989;
+      border-radius: 5px;
+      height: 3px;
+      width: 100%;
+      left: 0;
+      bottom: 5px;
+      transform-origin: right;
+      transform: scaleX(0);
+      transition: transform 0.5s;
+    }
+
+    .nav a:hover:after {
+      transform-origin: left;
+      transform: scaleX(1);
+    }
+
+    /* Login Wrapper */
+    .wrapper {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 400px;
+      height: 500px;
+      background: transparent;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      transform: scale(1);
+      z-index: 1;
+      transition: 0.7s ease-in-out;
+    }
+
+    .wrapper.active-popup {
+      transform: scale(1);
+    }
+
+    .wrapper.active {
+      height: 520px;
+    }
+
+    /* Form Box */
+    .wrapper .form-box {
+      position: absolute;
+      width: 100%;
+      padding: 40px;
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    /* Login Form */
+    .wrapper .form-box.login {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .wrapper.active .form-box.login {
+      transition: none;
+      transform: translateX(-400px);
+      opacity: 0;
+    }
+
+    /* Register Form */
+    .wrapper .form-box.register {
+      position: absolute;
+      transform: translateX(400px);
+      opacity: 0;
+    }
+
+    .wrapper.active .form-box.register {
+      transition: transform 0.18s ease;
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    /* Close Icon */
+    .wrapper .icon-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 45px;
+      height: 45px;
+      background: #532989;
+      font-size: 2em;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom-left-radius: 20px;
+      cursor: pointer;
+      z-index: 99;
+    }
+
+    .icon-close:hover {
+      background: #8b5ec5;
+    }
+
+    .form-box h2 {
+      font-size: 2em;
+      color: #532989;
+      text-align: center;
+    }
+
+    /* Role Selection */
+    .role-selection {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .role-btn {
+      padding: 8px 15px;
+      background: transparent;
+      border: 2px solid #532989;
+      border-radius: 20px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .role-btn.active {
+      background: #532989;
+      color: #fff;
+    }
+
+    .role-btn:hover {
+      background: #5f2ca1;
+    }
+
+    /* Input Box */
+    .input-box {
+      position: relative;
+      width: 100%;
+      height: 50px;
+      border-bottom: 2px solid #fff;
+      margin: 30px 0;
+    }
+
+    .input-box label {
+      position: absolute;
+      top: 50%;
+      left: 5px;
+      transform: translateY(-50%);
+      font-size: 1em;
+      color: #fff;
+      font-weight: 500;
+      pointer-events: none;
+      transition: 0.5s;
+    }
+
+    .input-box input:focus ~ label,
+    .input-box input:valid ~ label {
+      top: -5px;
+    }
+
+    .input-box input {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 1em;
+      color: #fff;
+      font-weight: 600;
+      padding: 0 35px 0 5px;
+    }
+
+    .input-box .icon {
+      position: absolute;
+      right: 8px;
+      font-size: 1.2em;
+      color: #fff;
+      line-height: 57px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 60%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    /* Forgot Password */
+    .forgot {
+      font-size: 1rem;
+      color: #532989;
+      font-weight: 500;
+      margin: 25px 0 15px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .forgot a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .forgot a:hover {
+      color: #532989;
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      height: 45px;
+      background: #532989;
+      border: none;
+      outline: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .btn:hover {
+      background: #5f2ca1;
+    }
+
+    /* Google Button */
+    .google-btn {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .btn.google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #fff;
+      color: #532989;
+      border: 1px solid #ccc;
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .btn.google img {
+      width: 25px;
+      height: 25px;
+    }
+
+    .btn.google:hover {
+      background: #f1f1f1;
+    }
+
+    /* Login/Register Links */
+    .login-register {
+      font-size: 1rem;
+      color: #fff;
+      text-align: center;
+      font-weight: 500;
+      margin: 25px 0 10px;
+    }
+
+    .login-register p a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-register p a:hover {
+      color: #532989;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      color: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      color: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+      display: none;
+    }
+    .notification.success {
+      background-color: #4caf50;
+    }
+    .notification.error {
+      background-color: #f44336;
+    }
+    .notification.info {
+      background-color: #2196f3;
+    }
+    button[disabled] {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .wrapper {
+        width: 90%;
+      }
+      
+      .nav ul li {
+        margin-right: 20px;
+      }
+      
+      .logo-text {
+        font-size: 1.2rem;
+      }
+      
+      .logo-subtext {
+        font-size: 0.8rem;
+      }
+    }
