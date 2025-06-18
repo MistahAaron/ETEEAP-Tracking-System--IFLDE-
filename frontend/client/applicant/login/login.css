@@ -157,11 +157,13 @@ header {
 
 .wrapper.active-popup {
   transform: scale(1);
+  transition: 0.7s ease-in-out;
 }
 
 .wrapper.active {
   height: 520px;
   transform: translateY(30px);
+  transition: 0.7s ease-in-out;
 }
 
 /* Form Box */

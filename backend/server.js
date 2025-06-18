@@ -26,7 +26,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost", // or your frontend URL
+    origin: [
+      "https://eteeap-tracking-system-iflde-production-88e8.up.railway.app",
+      "https://eteeapfrontend-production-68b2.up.railway.app",
+      "http://localhost",
+    ], // or your frontend URL
     credentials: true,
     exposedHeaders: ["set-cookie"],
   })
@@ -34,7 +38,7 @@ app.use(
 app.use(bodyParser.json());
 
 // Serve static files
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "frontend")));
 
 connectDB();
 
@@ -46,7 +50,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     success: false,
     error: "Internal server error",
-    details: process.env.NODE_ENV === "development" ? err.message : undefined,
+    details: process.env.NODE_ENV === "production" ? err.message : undefined,
   });
 });
 
