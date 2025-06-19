@@ -31,93 +31,84 @@
         </nav>
     </header>
 
-    <div class="wrapper">
-        <!-- Role Selection -->
-        <div class="form-box role-selection">
-            <h2>Select Your Role</h2>
-            <div class="role-buttons">
-                <button class="btn role-btn" data-role="applicant">Applicant</button>
-                <button class="btn role-btn" data-role="admin">Administrator</button>
-                <button class="btn role-btn" data-role="assessor">Assessor</button>
-            </div>
+ <div class="wrapper">
+    <!-- Login Form with Role Selection at Top -->
+    <div class="form-box login">
+        <h2>Login</h2>
+        <div class="role-tabs">
+            <button class="role-tab active" data-role="applicant">Applicant</button>
+            <button class="role-tab" data-role="assessor">Assessor</button>
+            <button class="role-tab" data-role="admin">Admin</button>
         </div>
-    
+        
         <!-- Applicant Login Form -->
-        <div class="form-box login applicant-form">
-            <h2>Applicant Login</h2>
-            <form id="applicantLoginForm">
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="email" id="applicantEmail" required>
-                    <label>Email</label>
-                </div>
-                <div class="input-box">
-                    <input type="password" id="applicantPassword" required>
-                    <label>Password</label>
-                    <span class="toggle-password">
-                        <ion-icon name="eye-off"></ion-icon>
-                    </span>
-                </div>
-                <div class="forgot">
-                    <a href="#" class="forgot-link">Forgot Password?</a>
-                </div>
-                <button type="submit" class="btn">Login</button>
-                <div class="google-btn">
-                    <button type="button" class="btn google">
-                        <img src="../img/Google Logo.png" alt="Google Logo">
-                        Continue with Google
-                    </button>
-                </div>
-                <div class="login-register">
-                    <p>Don't have an account? <a href="#" class="register-link">Register</a></p>
-                </div>
-            </form>
-        </div>
-    
+        <form id="applicantLoginForm" class="login-form active" data-role="applicant">
+            <div class="input-box">
+                <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                <input type="email" id="applicantEmail" required>
+                <label>Email</label>
+            </div>
+            <div class="input-box">
+                <input type="password" id="applicantPassword" required>
+                <label>Password</label>
+                <span class="toggle-password">
+                    <ion-icon name="eye-off"></ion-icon>
+                </span>
+            </div>
+            <div class="forgot">
+                <a href="#" class="forgot-link">Forgot Password?</a>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <div class="google-btn">
+                <button type="button" class="btn google">
+                    <img src="../img/Google Logo.png" alt="Google Logo">
+                    Continue with Google
+                </button>
+            </div>
+            <div class="login-register">
+                <p>Don't have an account? <a href="#" class="register-link">Register</a></p>
+            </div>
+        </form>
+        
         <!-- Admin Login Form -->
-        <div class="form-box login admin-form">
-            <h2>Admin Login</h2>
-            <form id="adminLoginForm">
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="email" id="adminEmail" required>
-                    <label>Email</label>
-                </div>
-                <div class="input-box">
-                    <input type="password" id="adminPassword" required>
-                    <label>Password</label>
-                    <span class="toggle-password">
-                        <ion-icon name="eye-off"></ion-icon>
-                    </span>
-                </div>
-                <div class="remember-me">
-                    <label><input type="checkbox" id="rememberMe"> Remember me</label>
-                </div>
-                <button type="submit" class="btn">Login</button>
-                <div id="admin-error-message" class="error-message"></div>
-            </form>
-        </div>
-    
+        <form id="adminLoginForm" class="login-form" data-role="admin">
+            <div class="input-box">
+                <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                <input type="email" id="adminEmail" required>
+                <label>Email</label>
+            </div>
+            <div class="input-box">
+                <input type="password" id="adminPassword" required>
+                <label>Password</label>
+                <span class="toggle-password">
+                    <ion-icon name="eye-off"></ion-icon>
+                </span>
+            </div>
+            <div class="remember-me">
+                <label><input type="checkbox" id="rememberMe"> Remember me</label>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <div id="admin-error-message" class="error-message"></div>
+        </form>
+        
         <!-- Assessor Login Form -->
-        <div class="form-box login assessor-form">
-            <h2>Assessor Login</h2>
-            <form id="assessorLoginForm">
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="email" id="assessorEmail" required>
-                    <label>Email</label>
-                </div>
-                <div class="input-box">
-                    <input type="password" id="assessorPassword" required>
-                    <label>Password</label>
-                    <span class="toggle-password">
-                        <ion-icon name="eye-off"></ion-icon>
-                    </span>
-                </div>
-                <button type="submit" class="btn">Login</button>
-                <div id="assessor-error-message" class="error-message"></div>
-            </form>
-        </div>
+        <form id="assessorLoginForm" class="login-form" data-role="assessor">
+            <div class="input-box">
+                <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                <input type="email" id="assessorEmail" required>
+                <label>Email</label>
+            </div>
+            <div class="input-box">
+                <input type="password" id="assessorPassword" required>
+                <label>Password</label>
+                <span class="toggle-password">
+                    <ion-icon name="eye-off"></ion-icon>
+                </span>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <div id="assessor-error-message" class="error-message"></div>
+        </form>
+    </div>
     
         <!-- Registration Form -->
         <div class="form-box register">
@@ -224,6 +215,7 @@
     <script src="login.js"></script>
 
     <div class="notification" id="notification" style="display: none;"></div>
+    <script src="login.js"></script>
 
 </body>
 </html>

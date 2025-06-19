@@ -1,27 +1,46 @@
 document.addEventListener("DOMContentLoaded", () => {
     const wrapper = document.querySelector('.wrapper');
+    const loginContainer = document.querySelector('.form-box.login');
     
-    // Role selection handling
-    const roleButtons = document.querySelectorAll('.role-btn');
-    const roleSelection = document.querySelector('.role-selection');
-    const loginForms = document.querySelectorAll('.form-box.login');
-    const registerForm = document.querySelector('.register');
-    const forgotForm = document.querySelector('.forgot');
-    const verificationForm = document.getElementById('verificationForm');
-    const newPasswordForm = document.getElementById('newPasswordForm');
+    // Role tab handling
+    const roleTabs = document.querySelectorAll('.role-tab');
+    const loginForms = document.querySelectorAll('.login-form');
     
     // Initialize form states
     function initForms() {
-        roleSelection.style.display = 'block';
-        loginForms.forEach(form => form.style.display = 'none');
-        registerForm.style.display = 'none';
-        forgotForm.style.display = 'none';
-        if (verificationForm) verificationForm.style.display = 'none';
-        if (newPasswordForm) newPasswordForm.style.display = 'none';
+        // Show only the active form (applicant by default)
+        loginForms.forEach(form => form.classList.remove('active'));
+        document.querySelector('.login-form[data-role="applicant"]').classList.add('active');
+        
+        // Set active tab
+        roleTabs.forEach(tab => tab.classList.remove('active'));
+        document.querySelector('.role-tab[data-role="applicant"]').classList.add('active');
+        
+        // Hide other forms
+        document.querySelector('.register').style.display = 'none';
+        document.querySelector('.forgot').style.display = 'none';
+        if (document.getElementById('verificationForm')) document.getElementById('verificationForm').style.display = 'none';
+        if (document.getElementById('newPasswordForm')) document.getElementById('newPasswordForm').style.display = 'none';
+        
         wrapper.classList.remove('active', 'active-forgot', 'active-verification', 'active-new-password');
     }
     
     initForms();
+
+    // Role tab switching
+    roleTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const role = tab.dataset.role;
+            
+            // Update active tab
+            roleTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Show the selected form
+            loginForms.forEach(form => form.classList.remove('active'));
+            document.querySelector(`.login-form[data-role="${role}"]`).classList.add('active');
+        });
+    });
 
     // Main nav login button
     document.querySelector('.btnLogin-popup')?.addEventListener('click', (e) => {
@@ -29,72 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
         initForms();
         wrapper.scrollIntoView({ behavior: 'smooth' });
     });
-
-    // Role selection
-    roleButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const role = button.dataset.role;
-            sessionStorage.setItem('selectedRole', role);
-            
-            // Hide role selection
-            roleSelection.style.display = 'none';
-            
-            // Hide all forms first
-            loginForms.forEach(form => form.style.display = 'none');
-            registerForm.style.display = 'none';
-            forgotForm.style.display = 'none';
-            if (verificationForm) verificationForm.style.display = 'none';
-            if (newPasswordForm) newPasswordForm.style.display = 'none';
-            
-            // Show the selected form
-            document.querySelector(`.${role}-form`).style.display = 'block';
-            
-            // Reset wrapper state
-            wrapper.classList.remove('active', 'active-forgot', 'active-verification', 'active-new-password');
-        });
-    });
-
-    // Back to role selection button
-    const backToRoleSelection = () => {
-        initForms();
-        resetInputs();
-    };
-
-    // Add back buttons to each login form
-    document.querySelectorAll('.login').forEach(form => {
-        const backBtn = document.createElement('button');
-        backBtn.type = 'button';
-        backBtn.className = 'btn back-btn';
-        backBtn.innerHTML = '<ion-icon name="arrow-back"></ion-icon> Back to Role Selection';
-        backBtn.addEventListener('click', backToRoleSelection);
-        form.querySelector('h2').insertAdjacentElement('afterend', backBtn);
-    });
-
-    // Common functions
-    const resetInputs = () => {
-        document.querySelectorAll("input").forEach((input) => {
-            if (input.type === "checkbox") {
-                input.checked = false;
-            } else {
-                input.value = "";
-            }
-        });
-    };
-
-    const showNotification = (message, type = "info") => {
-        const notification = document.getElementById("notification");
-        notification.textContent = message;
-        notification.className = `notification ${type}`;
-        notification.style.display = "block";
-        
-        setTimeout(() => {
-            notification.style.opacity = "0";
-            setTimeout(() => {
-                notification.style.display = "none";
-                notification.style.opacity = "1";
-            }, 500);
-        }, 3000);
-    };
 
     // Password toggle functionality
     document.querySelectorAll(".toggle-password").forEach((toggle) => {
@@ -131,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
             form.style.display = 'none';
         });
         // Show registration form
-        registerForm.style.display = 'block';
+        document.querySelector('.register').style.display = 'block';
         wrapper.classList.add('active');
     });
 
@@ -141,8 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('.form-box').forEach(form => {
             form.style.display = 'none';
         });
-        // Show applicant login form
-        document.querySelector('.applicant-form').style.display = 'block';
+        // Show login form
+        loginContainer.style.display = 'block';
+        initForms(); // Reset to applicant login
         wrapper.classList.remove('active');
     });
 
@@ -153,23 +107,49 @@ document.addEventListener("DOMContentLoaded", () => {
             form.style.display = 'none';
         });
         // Show forgot password form
-        forgotForm.style.display = 'block';
+        document.querySelector('.forgot').style.display = 'block';
         wrapper.classList.add('active-forgot');
     });
+
+    // Common functions
+    const resetInputs = () => {
+        document.querySelectorAll("input").forEach((input) => {
+            if (input.type === "checkbox") {
+                input.checked = false;
+            } else {
+                input.value = "";
+            }
+        });
+    };
+
+    const showNotification = (message, type = "info") => {
+        const notification = document.getElementById("notification");
+        notification.textContent = message;
+        notification.className = `notification ${type}`;
+        notification.style.display = "block";
+        
+        setTimeout(() => {
+            notification.style.opacity = "0";
+            setTimeout(() => {
+                notification.style.display = "none";
+                notification.style.opacity = "1";
+            }, 500);
+        }, 3000);
+    };
 
     // Password reset flow
     document.getElementById("resetForm")?.addEventListener("submit", (e) => {
         e.preventDefault();
-        forgotForm.style.display = "none";
-        verificationForm.style.display = "block";
+        document.querySelector('.forgot').style.display = "none";
+        document.getElementById('verificationForm').style.display = "block";
         wrapper.classList.remove('active-forgot');
         wrapper.classList.add('active-verification');
     });
 
     document.getElementById("verifyCodeForm")?.addEventListener("submit", (e) => {
         e.preventDefault();
-        verificationForm.style.display = "none";
-        newPasswordForm.style.display = "block";
+        document.getElementById('verificationForm').style.display = "none";
+        document.getElementById('newPasswordForm').style.display = "block";
         wrapper.classList.remove('active-verification');
         wrapper.classList.add('active-new-password');
     });
@@ -186,9 +166,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         showNotification("Password successfully reset! Redirecting to login...", "success");
         setTimeout(() => {
-            const role = sessionStorage.getItem('selectedRole') || 'applicant';
-            newPasswordForm.style.display = 'none';
-            document.querySelector(`.${role}-form`).style.display = 'block';
+            document.getElementById('newPasswordForm').style.display = 'none';
+            loginContainer.style.display = 'block';
+            initForms(); // Reset to applicant login
             wrapper.classList.remove('active-new-password');
         }, 2000);
     });
@@ -285,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 showNotification("Login successful!", "success");
                 localStorage.setItem("userId", data.data.userId);
                 localStorage.setItem("userEmail", data.data.email);
-                window.location.href = "../Timeline/timeline.html";
+                window.location.href = "/client/applicant/timeline/timeline.html";
             } else {
                 throw new Error(data.error || "Login failed");
             }
@@ -403,33 +383,5 @@ document.addEventListener("DOMContentLoaded", () => {
     if (savedAdminEmail) {
         document.getElementById("adminEmail").value = savedAdminEmail;
         document.getElementById("rememberMe").checked = true;
-    }
-
-    // Check auth status for admin and assessor
-    async function checkAuthStatus(role) {
-        try {
-            const response = await fetch(`/${role}/auth-status`, {
-                credentials: "include"
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.authenticated) {
-                    window.location.href = `/client/${role}/dashboard/dashboard.html`;
-                }
-            }
-        } catch (error) {
-            console.error(`${role} auth check error:`, error);
-        }
-    }
-
-    // Check auth status on page load if coming from a role-specific page
-    const urlParams = new URLSearchParams(window.location.search);
-    const roleParam = urlParams.get('role');
-    
-    if (roleParam === 'admin') {
-        checkAuthStatus('admin');
-    } else if (roleParam === 'assessor') {
-        checkAuthStatus('assessor');
     }
 });
