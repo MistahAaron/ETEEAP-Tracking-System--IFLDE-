@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,7 +68,7 @@
       <!-- Dashboard Section -->
       <div id="dashboardSection" class="section dashboard active">
         <div class="dashboard-cards">
-          <div class="card">
+          <div class="card status-filter" data-status="assigned">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-users"></i>
@@ -74,7 +77,7 @@
             <div class="card-title">Assigned Applicants</div>
             <div class="card-value" id="totalStudents">0</div>
           </div>
-          <div class="card">
+          <div class="card status-filter" data-status="in-progress">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-book"></i>
@@ -83,7 +86,7 @@
             <div class="card-title">In-Progress</div>
             <div class="card-value" id="activeCourses">0</div>
           </div>
-          <div class="card">
+          <div class="card status-filter" data-status="evaluated">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-graduation-cap"></i>
@@ -92,7 +95,7 @@
             <div class="card-title">Evaluated</div>
             <div class="card-value" id="totalGraduates">0</div>
           </div>
-          <div class="card">
+          <div class="card status-filter" data-status="failed">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-chart-line"></i>
@@ -106,7 +109,7 @@
         <!---Student List in Dashboard-->
         <div class="student-list">
           <div class="table-header">
-            <h2>Recent Students</h2>
+            <h2 id="currentFilterTitle">Recent Students</h2>
           </div>
           <table>
             <thead>
@@ -137,3 +140,15 @@
   <script src="dashboard.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

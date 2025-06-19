@@ -250,6 +250,26 @@
             color: var(--text-color);
         }
 
+        .status-filter {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.status-filter:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.active-filter {
+    border: 2px solid var(--primary-color);
+    background-color: #f5f0ff;
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+
         /* Student List Table */
         .student-list {
             background-color: white;
@@ -740,4 +760,5 @@ th {
     background-color: #dbeafe;
     color: #1e40af;
 }
+
 

@@ -1,3 +1,4 @@
+
 const API_BASE_URL = "http://localhost:3000";
 let students = [];
 let courses = [];
@@ -6,6 +7,7 @@ let editingId = null;
 let editingCourseId = null;
 let deleteType = ""; // 'student' or 'course'
 let deleteId = null;
+let currentFilter = 'all'; // Track current filter
 
 // DOM Elements
 const studentTableBody = document.getElementById("studentTableBody");
@@ -14,7 +16,6 @@ const courseTableBody = document.getElementById("courseTableBody");
 const searchInput = document.getElementById("searchInput");
 const loadingSpinner = document.getElementById("loadingSpinner");
 const navItems = document.querySelectorAll(".nav-item");
-
 
 function updateUserDisplay(user) {
     const usernameElement = document.querySelector('.username');
@@ -34,7 +35,7 @@ function updateUserDisplay(user) {
 document.addEventListener("DOMContentLoaded", async () => {
     initializeEventListeners();
     await checkAndLoadData();
-    await loadAssessorInfo(); // Add this line
+    await loadAssessorInfo();
 });
 
 function initializeEventListeners() {
@@ -103,13 +104,88 @@ function initializeEventListeners() {
     }
 }
 
-// Update the checkAndLoadData function
+// Initialize filter cards
+function initializeFilterCards() {
+    const filterCards = document.querySelectorAll('.status-filter');
+    
+    filterCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Remove active class from all cards
+            filterCards.forEach(c => c.classList.remove('active-filter'));
+            
+            // Add active class to clicked card
+            this.classList.add('active-filter');
+            
+            // Set current filter
+            currentFilter = this.dataset.status;
+            
+            // Update table title
+            updateTableTitle();
+            
+            // Filter and render students
+            filterStudents();
+        });
+    });
+}
+
+// Update table title based on current filter
+function updateTableTitle() {
+    const titleMap = {
+        'assigned': 'Assigned Applicants',
+        'in-progress': 'In-Progress Applicants',
+        'evaluated': 'Evaluated Applicants',
+        'failed': 'Failed Applicants',
+        'all': 'Recent Students'
+    };
+    
+    document.getElementById('currentFilterTitle').textContent = titleMap[currentFilter] || 'Recent Students';
+}
+
+// Filter students based on current filter
+function filterStudents() {
+    let filteredStudents = [];
+    
+    switch(currentFilter) {
+        case 'assigned':
+            filteredStudents = students;
+            break;
+            
+        case 'in-progress':
+            filteredStudents = students.filter(s => 
+                s.status.toLowerCase().includes("progress") || 
+                s.status.toLowerCase().includes("assessment")
+            );
+            break;
+            
+        case 'evaluated':
+            filteredStudents = students.filter(s => 
+                s.status.toLowerCase().includes("approved") || 
+                s.status.toLowerCase().includes("completed")
+            );
+            break;
+            
+        case 'failed':
+            filteredStudents = students.filter(s => 
+                s.status.toLowerCase().includes("rejected") || 
+                s.status.toLowerCase().includes("failed")
+            );
+            break;
+            
+        default:
+            filteredStudents = students;
+    }
+    
+    renderStudentTables(filteredStudents);
+}
+
+// Update the checkAndLoadData function to initialize filters
 async function checkAndLoadData() {
     showLoading();
     try {
         await loadAssessorInfo();
-        await loadAssignedApplicants(); // Changed from loadStudents
+        await loadAssignedApplicants();
         await updateDashboardStats();
+        initializeFilterCards(); // Initialize the filter cards
     } catch (error) {
         console.error("Error during initialization:", error);
         showNotification("Error initializing application", "error");
@@ -195,115 +271,6 @@ async function updateDashboardStats() {
     }
 }
 
-// In ApplicantProfile.js
-async function showAssignAssessorModal() {
-    const modal = document.getElementById('assignAssessorModal');
-    const assessorSelect = document.getElementById('assessorSelect');
-    
-    if (!modal || !assessorSelect) return;
-    
-    showLoading();
-    try {
-      // First approve the application
-      const approveResponse = await fetch(`${API_BASE_URL}/api/admin/applicants/${applicantId}/approve`, {
-        method: 'POST',
-        credentials: 'include'
-      });
-      
-      const approveData = await approveResponse.json();
-      
-      if (!approveData.success) {
-        throw new Error(approveData.error || 'Failed to approve application');
-      }
-  
-      // Then fetch available assessors
-      const assessorsResponse = await fetch(`${API_BASE_URL}/api/admin/available-assessors`, {
-        credentials: 'include'
-      });
-      
-      if (!assessorsResponse.ok) {
-        throw new Error('Failed to fetch assessors');
-      }
-      
-      const assessorsData = await assessorsResponse.json();
-      
-      if (!assessorsData.success || !assessorsData.data) {
-        throw new Error(assessorsData.error || 'No assessors available');
-      }
-      
-      // Populate assessor dropdown
-      assessorSelect.innerHTML = '<option value="" disabled selected>Select an assessor</option>';
-      assessorsData.data.forEach(assessor => {
-        const option = document.createElement('option');
-        option.value = assessor._id;
-        option.textContent = `${assessor.fullName} (${assessor.assessorId}) - ${formatExpertise(assessor.expertise)}`;
-        assessorSelect.appendChild(option);
-      });
-      
-      // Show modal
-      modal.style.display = 'flex';
-      
-    } catch (error) {
-      console.error('Error loading assessors:', error);
-      showNotification(error.message, 'error');
-      closeModal();
-    } finally {
-      hideLoading();
-    }
-  }
-  
-  function setupAssessorAssignment() {
-    const confirmAssignBtn = document.getElementById('confirmAssignBtn');
-    const assessorSelect = document.getElementById('assessorSelect');
-    
-    if (!confirmAssignBtn || !assessorSelect) return;
-    
-    confirmAssignBtn.addEventListener('click', async function() {
-      const assessorId = assessorSelect.value;
-      if (!assessorId) {
-        showNotification('Please select an assessor', 'error');
-        return;
-      }
-      
-      showLoading();
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/applicants/${applicantId}/assign-assessor`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            applicantId,
-            assessorId
-          }),
-          credentials: 'include'
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-          showNotification('Assessor assigned successfully!', 'success');
-          updateStatusBadge('Under Assessment');
-          if (currentApplicant) {
-            currentApplicant.status = 'Under Assessment';
-            if (!currentApplicant.assignedAssessors) {
-              currentApplicant.assignedAssessors = [];
-            }
-            currentApplicant.assignedAssessors.push(assessorId);
-          }
-          closeModal();
-        } else {
-          throw new Error(data.error || 'Failed to assign assessor');
-        }
-      } catch (error) {
-        console.error('Error assigning assessor:', error);
-        showNotification(error.message, 'error');
-      } finally {
-        hideLoading();
-      }
-    });
-  }
-
 function renderCourseTable(coursesToRender) {
     courseTableBody.innerHTML = "";
 
@@ -368,8 +335,17 @@ function handleSearch(e) {
 
 // Utility Functions
 function formatDate(dateString) {
-    const options = { year: "numeric", month: "short", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    if (!dateString) return 'N/A';
+    try {
+        const date = new Date(dateString);
+        return isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    } catch {
+        return 'N/A';
+    }
 }
 
 function capitalizeFirstLetter(string) {
@@ -417,51 +393,6 @@ function showNotification(message, type = "info") {
     }, 3000);
 }
 
-// Enhanced Logout Functionality
-async function handleLogout() {
-    showLoading();
-    try {
-        // First check if we're actually logged in
-        const authCheck = await fetch('http://localhost:3000/assessor/auth-status', {
-            credentials: 'include'
-        });
-        
-        if (!authCheck.ok) {
-            // If not authenticated, just redirect
-            sessionStorage.removeItem('assessorData');
-            window.location.href = '/client/assessor/login/login.html';
-            return;
-        }
-
-        // If authenticated, proceed with logout
-        const response = await fetch('http://localhost:3000/assessor/logout', {
-            method: 'POST',
-            credentials: 'include'
-        });
-        
-        const data = await response.json();
-        if (data.success) {
-            // Show success notification before redirecting
-            showNotification('Logout successful! Redirecting to login page...', 'success');
-            
-            // Clear any stored data
-            sessionStorage.removeItem('assessorData');
-            
-            // Wait a moment so user can see the notification
-            setTimeout(() => {
-                window.location.href = data.redirectTo || '/client/assessor/login/login.html';
-            }, 1500);
-        } else {
-            showNotification('Logout failed. Please try again.', 'error');
-            hideLoading();
-        }
-    } catch (error) {
-        console.error('Logout error:', error);
-        showNotification('Logout failed. Please try again.', 'error');
-        hideLoading();
-    }
-}
-
 // Add this function to fetch and display user info
 async function loadAssessorInfo() {
     try {
@@ -496,8 +427,7 @@ async function loadAssessorInfo() {
     }
 }
 
-
-// Logout functionality
+// Enhanced Logout Functionality
 async function handleLogout() {
     showLoading();
     try {
@@ -542,149 +472,6 @@ async function handleLogout() {
     }
 }
 
-// Set up logout link
-const logoutLink = document.getElementById('logoutLink');
-if (logoutLink) {
-    logoutLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        handleLogout();
-    });
-}
-
-// Update the renderStudentTables function to fix the view button
-// Update the renderStudentTables function to fix the view button navigation
-function renderStudentTables(studentsToRender) {
-    const tables = [studentTableBody, allStudentsTableBody];
-
-    tables.forEach(table => {
-        if (!table) return;
-
-        table.innerHTML = "";
-
-        if (studentsToRender.length === 0) {
-            const colSpan = table.closest("table").querySelectorAll("th").length;
-            table.innerHTML = `
-                <tr>
-                    <td colspan="${colSpan}" class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <h3>No Applicants Assigned to You</h3>
-                        <p>Applicants assigned to you will appear here</p>
-                    </td>
-                </tr>
-            `;
-            return;
-        }
-
-        studentsToRender.forEach(student => {
-            const statusClass = student.status.toLowerCase().replace(' ', '-');
-            
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${student.applicantId || 'N/A'}</td>
-                <td>${escapeHtml(student.name)}</td>
-                <td>${escapeHtml(student.course)}</td>
-                <td>
-                    <span class="status-badge status-${statusClass}">
-                        ${formatStatus(student.status)}
-                    </span>
-                </td>
-                <td>${student.score || student.score === 0 ? student.score : 'N/A'}</td>
-                <td>${formatDate(student.applicationDate)}</td>
-                <td class="action-buttons">
-                    <button class="action-btn view-btn" onclick="viewStudent('${student._id}')">
-                        <i class="fas fa-eye"></i> View
-                    </button>
-                    <button class="action-btn reject-btn" onclick="rejectStudent('${student._id}', event)">
-                        <i class="fas fa-times"></i> Reject
-                    </button>
-                </td>
-            `;
-            table.appendChild(row);
-        });
-    });
-}
-
-// Update the rejectStudent function to prevent default behavior
-async function rejectStudent(applicantId, event) {
-    if (event) event.preventDefault(); // Prevent any default behavior
-    
-    if (!confirm('Are you sure you want to reject this applicant? This action cannot be undone.')) {
-        return;
-    }
-
-    showLoading();
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/assessor/applicants/${applicantId}/reject`, {
-            method: 'POST',
-            credentials: 'include'
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            showNotification('Applicant rejected successfully', 'success');
-            await loadAssignedApplicants();
-        } else {
-            throw new Error(data.error || 'Failed to reject applicant');
-        }
-    } catch (error) {
-        console.error('Error rejecting applicant:', error);
-        showNotification(error.message, 'error');
-    } finally {
-        hideLoading();
-    }
-}
-
-
-
-// Update the formatDate function to handle missing dates better
-function formatDate(dateString) {
-    if (!dateString) return 'N/A';
-    try {
-        const date = new Date(dateString);
-        return isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-    } catch {
-        return 'N/A';
-    }
-}
-
-
-
-// Add this function to fetch assigned applicants
-async function loadAssignedApplicants() {
-    showLoading();
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/assessor/applicants`, {
-            credentials: 'include'
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch assigned applicants');
-        }
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            students = data.data || [];
-            renderStudentTables(students);
-            updateDashboardStats();
-        } else {
-            throw new Error(data.error || 'No applicants assigned');
-        }
-    } catch (error) {
-        console.error('Error loading assigned applicants:', error);
-        showNotification(error.message, 'error');
-        students = [];
-        renderStudentTables([]);
-    } finally {
-        hideLoading();
-    }
-}
-
 // Update the renderStudentTables function
 function renderStudentTables(studentsToRender) {
     const tables = [studentTableBody, allStudentsTableBody];
@@ -700,8 +487,8 @@ function renderStudentTables(studentsToRender) {
                 <tr>
                     <td colspan="${colSpan}" class="empty-state">
                         <i class="fas fa-users"></i>
-                        <h3>No Applicants Assigned to You</h3>
-                        <p>Applicants assigned to you will appear here</p>
+                        <h3>No Applicants Found</h3>
+                        <p>No applicants match the current filter</p>
                     </td>
                 </tr>
             `;
@@ -744,6 +531,36 @@ function formatStatus(status) {
         .join(' ');
 }
 
+// Add this function to fetch assigned applicants
+async function loadAssignedApplicants() {
+    showLoading();
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/assessor/applicants`, {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch assigned applicants');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            students = data.data || [];
+            renderStudentTables(students);
+            updateDashboardStats();
+        } else {
+            throw new Error(data.error || 'No applicants assigned');
+        }
+    } catch (error) {
+        console.error('Error loading assigned applicants:', error);
+        showNotification(error.message, 'error');
+        students = [];
+        renderStudentTables([]);
+    } finally {
+        hideLoading();
+    }
+}
 
 async function rejectStudent(applicantId) {
     if (!confirm('Are you sure you want to reject this applicant? This action cannot be undone.')) {
@@ -774,8 +591,6 @@ async function rejectStudent(applicantId) {
     }
 }
 
-
-// First, add this function to your script
 function viewStudent(applicantId) {
     // Find the student in our local data to get the applicantId
     const student = students.find(s => s._id === applicantId);
@@ -788,20 +603,8 @@ function viewStudent(applicantId) {
         window.location.href = url;
     }
 }
-// Then in renderStudentTables:
-row.innerHTML = `
-    <td class="action-buttons">
-        <button class="action-btn view-btn" onclick="viewStudent('${student._id}')">
-            <i class="fas fa-eye"></i> View
-        </button>
-        <button class="action-btn reject-btn" onclick="rejectStudent('${student._id}', event)">
-            <i class="fas fa-times"></i> Reject
-        </button>
-    </td>
-`;
 
-
-
-// Make function available globally
+// Make functions available globally
 window.handleLogout = handleLogout;
 window.rejectStudent = rejectStudent;
+window.viewStudent = viewStudent;
