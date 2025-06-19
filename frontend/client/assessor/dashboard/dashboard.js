@@ -429,7 +429,7 @@ async function handleLogout() {
         if (!authCheck.ok) {
             // If not authenticated, just redirect
             sessionStorage.removeItem('assessorData');
-            window.location.href = '/login/login.html';
+            window.location.href = '/client/assessor/login/login.html';
             return;
         }
 
@@ -449,7 +449,7 @@ async function handleLogout() {
             
             // Wait a moment so user can see the notification
             setTimeout(() => {
-                window.location.href = data.redirectTo || '/login/login.html';
+                window.location.href = data.redirectTo || '/client/assessor/login/login.html';
             }, 1500);
         } else {
             showNotification('Logout failed. Please try again.', 'error');
@@ -481,7 +481,7 @@ async function loadAssessorInfo() {
             sessionStorage.setItem('assessorData', JSON.stringify(data.user));
         } else {
             // If not authenticated, redirect to login
-            window.location.href = '/login/login.html';
+            window.location.href = '/client/assessor/login/login.html';
         }
     } catch (error) {
         console.error('Error loading assessor info:', error);
@@ -491,7 +491,7 @@ async function loadAssessorInfo() {
             updateUserDisplay(JSON.parse(storedData));
         } else {
             // If no stored data and can't fetch, redirect to login
-            window.location.href = '/login/login.html';
+            window.location.href = '/client/assessor/login/login.html';
         }
     }
 }
@@ -509,7 +509,7 @@ async function handleLogout() {
         if (!authCheck.ok) {
             // If not authenticated, just redirect
             sessionStorage.removeItem('assessorData');
-            window.location.href = '/login/login.html';
+            window.location.href = '/client/assessor/login/login.html';
             return;
         }
 
@@ -529,7 +529,7 @@ async function handleLogout() {
             
             // Wait a moment so user can see the notification
             setTimeout(() => {
-                window.location.href = data.redirectTo || '/login/login.html';
+                window.location.href = data.redirectTo || '/client/assessor/login/login.html';
             }, 1500);
         } else {
             showNotification('Logout failed. Please try again.', 'error');
