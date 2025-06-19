@@ -463,6 +463,107 @@ tr:nth-child(even) {
   margin-bottom: 30px;
 }
 
+/* Add these new styles for the search and sort components */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--background-color);
+    padding: 10px 15px;
+    border-radius: 8px;
+    width: 300px;
+}
+
+.search-bar input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+}
+
+/* Sort Dropdown Styles */
+.sort-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.sort-btn:hover {
+  background-color: #e2e8f0;
+}
+
+.sort-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  z-index: 100;
+  display: none;
+  overflow: hidden;
+}
+
+.sort-dropdown:hover .sort-options {
+  display: block;
+}
+
+.sort-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.sort-option:hover {
+  background-color: #f8fafc;
+  color: var(--primary-color);
+}
+
+.sort-divider {
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 5px 0;
+}
+
+/* Header fixes */
+
+
+/* Keep existing styles below */
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+
+/* ... (keep all your existing CSS styles below) ... */
+
 /* Responsive Table */
 @media (max-width: 768px) {
   table {
