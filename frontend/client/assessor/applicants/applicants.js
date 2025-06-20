@@ -91,7 +91,80 @@ function initializeEventListeners() {
       await handleLogout();
     });
   }
+   initializeSortDropdown();
 }
+
+
+function initializeSortDropdown() {
+  const sortBtn = document.querySelector('.sort-btn');
+  const sortOptions = document.querySelector('.sort-options');
+
+  if (sortBtn && sortOptions) {
+    sortBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sortOptions.style.display = sortOptions.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', () => {
+      sortOptions.style.display = 'none';
+    });
+
+    document.querySelectorAll('.sort-option').forEach(option => {
+      option.addEventListener('click', (e) => {
+        const sortType = e.target.getAttribute('data-sort');
+        handleSort(sortType);
+        sortOptions.style.display = 'none';
+      });
+    });
+  }
+}
+
+function handleSort(sortType) {
+  if (!applicants || applicants.length === 0) return;
+
+  let sortedApplicants = [...applicants];
+
+  switch (sortType) {
+    case 'id-asc':
+      sortedApplicants.sort((a, b) => (a.applicantId || '').localeCompare(b.applicantId || ''));
+      break;
+    case 'id-desc':
+      sortedApplicants.sort((a, b) => (b.applicantId || '').localeCompare(a.applicantId || ''));
+      break;
+    case 'status-under-assessment':
+      sortedApplicants = sortedApplicants.filter(app => 
+        app.status.toLowerCase().includes('under assessment'));
+      break;
+    case 'status-pending':
+      sortedApplicants = sortedApplicants.filter(app => 
+        app.status.toLowerCase().includes('pending'));
+      break;
+    case 'status-evaluated-pass':
+      sortedApplicants = sortedApplicants.filter(app => 
+        app.status.toLowerCase().includes('evaluated-pass') || 
+        app.status.toLowerCase().includes('evaluated pass'));
+      break;
+    default:
+      break;
+  }
+
+  renderApplicantTable(sortedApplicants);
+  
+  let sortMessage = '';
+  switch (sortType) {
+    case 'id-asc': sortMessage = 'Sorted by ID (ascending)'; break;
+    case 'id-desc': sortMessage = 'Sorted by ID (descending)'; break;
+    case 'status-under-assessment': sortMessage = 'Showing Under Assessment applicants'; break;
+    case 'status-pending': sortMessage = 'Showing Pending applicants'; break;
+    case 'status-evaluated-pass': sortMessage = 'Showing Evaluated-Pass applicants'; break;
+  }
+  
+  if (sortMessage) {
+    showNotification(sortMessage, 'info');
+  }
+}
+
+
 
 async function checkAndLoadData() {
   showLoading();

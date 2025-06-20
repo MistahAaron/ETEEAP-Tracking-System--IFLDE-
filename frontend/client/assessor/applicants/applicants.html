@@ -46,6 +46,20 @@
               placeholder="Search applicants..."
               id="searchInput"
             />
+            <div class="sort-dropdown">
+              <button class="sort-btn">
+                <i class="fas fa-sort"></i> Sort
+                <i class="fas fa-caret-down"></i>
+              </button>
+              <div class="sort-options">
+                <div class="sort-option" data-sort="id-asc">ID (Low to High)</div>
+                <div class="sort-option" data-sort="id-desc">ID (High to Low)</div>
+                <div class="sort-divider"></div>
+                <div class="sort-option" data-sort="status-under-assessment">Under Assessment</div>
+                <div class="sort-option" data-sort="status-pending">Pending</div>
+                <div class="sort-option" data-sort="status-evaluated-pass">Evaluated-Pass</div>
+              </div>
+            </div>
           </div>
 
           <div class="user-profile">
@@ -54,7 +68,6 @@
                 <i class="fas fa-user"></i>
               </div>
               <span class="username">Loading...</span>
-              <!-- This will be replaced -->
               <i class="fas fa-caret-down dropdown-toggle"></i>
               <div class="dropdown-menu">
                 <a href="../profile/profile.html" class="dropdown-item">
