@@ -309,7 +309,7 @@ const admin = {
     },
     
     redirectToLogin: () => {
-        window.location.href = '/login/login.html';
+        window.location.href = '/client/applicant/login/login.html';
     },
     
     clearAuthData: () => {
