@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Hide other forms
         document.querySelector('.register').style.display = 'none';
+        document.querySelector('.admin-register').style.display = 'none';
         document.querySelector('.forgot').style.display = 'none';
         if (document.getElementById('verificationForm')) document.getElementById('verificationForm').style.display = 'none';
         if (document.getElementById('newPasswordForm')) document.getElementById('newPasswordForm').style.display = 'none';
@@ -71,9 +72,15 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("terms-con").style.display = "block";
     });
 
+    document.getElementById("admin-terms-link")?.addEventListener("click", function(event) {
+        event.preventDefault();
+        document.getElementById("terms-con").style.display = "block";
+    });
+
     document.getElementById("accept-btn")?.addEventListener("click", function() {
         document.getElementById("terms-con").style.display = "none";
         document.getElementById("terms-checkbox").checked = true;
+        document.getElementById("admin-terms-checkbox").checked = true;
     });
 
     // Form switching logic (register/login/forgot)
@@ -88,6 +95,17 @@ document.addEventListener("DOMContentLoaded", () => {
         wrapper.classList.add('active');
     });
 
+    document.querySelector(".admin-register-link")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        // Hide all other forms
+        document.querySelectorAll('.form-box').forEach(form => {
+            form.style.display = 'none';
+        });
+        // Show admin registration form
+        document.querySelector('.admin-register').style.display = 'block';
+        wrapper.classList.add('active');
+    });
+
     document.querySelector(".login-link")?.addEventListener("click", (e) => {
         e.preventDefault();
         // Hide all other forms
@@ -97,6 +115,21 @@ document.addEventListener("DOMContentLoaded", () => {
         // Show login form
         loginContainer.style.display = 'block';
         initForms(); // Reset to applicant login
+        wrapper.classList.remove('active');
+    });
+
+    document.querySelector(".admin-login-link")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        // Hide all other forms
+        document.querySelectorAll('.form-box').forEach(form => {
+            form.style.display = 'none';
+        });
+        // Show login form with admin tab active
+        loginContainer.style.display = 'block';
+        roleTabs.forEach(tab => tab.classList.remove('active'));
+        document.querySelector('.role-tab[data-role="admin"]').classList.add('active');
+        loginForms.forEach(form => form.classList.remove('active'));
+        document.querySelector('.login-form[data-role="admin"]').classList.add('active');
         wrapper.classList.remove('active');
     });
 
@@ -173,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 2000);
     });
 
-    // Applicant Registration
+    // Applicant Registration (UNCHANGED)
     document.getElementById("registerForm")?.addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = document.getElementById("regEmail").value.trim().toLowerCase();
@@ -229,6 +262,91 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = "/client/applicant/info/information.html";
         } catch (error) {
             showNotification(`Registration failed: ${error.message}`, "error");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+        }
+    });
+
+    // Admin Registration (NEW)
+    document.getElementById("adminRegisterForm")?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById("admin-full-name").value.trim();
+        const email = document.getElementById("admin-regEmail").value.trim().toLowerCase();
+        const password = document.getElementById("admin-regPassword").value;
+        const confirmPassword = document.getElementById("admin-confirmPassword").value;
+        const errorElement = document.getElementById("admin-register-error-message");
+
+        errorElement.style.display = "none";
+
+        // Client-side validation
+        if (!fullName || !email || !password || !confirmPassword) {
+            errorElement.textContent = "All fields are required";
+            errorElement.style.display = "block";
+            return;
+        }
+
+        if (!email.includes("@") || !email.includes(".")) {
+            errorElement.textContent = "Please enter a valid email address";
+            errorElement.style.display = "block";
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            errorElement.textContent = "Passwords do not match!";
+            errorElement.style.display = "block";
+            return;
+        }
+
+        if (password.length < 8 || password.length > 16) {
+            errorElement.textContent = "Password must be 8-16 characters";
+            errorElement.style.display = "block";
+            return;
+        }
+
+        if (!document.getElementById("admin-terms-checkbox").checked) {
+            errorElement.textContent = "You must accept the terms and conditions";
+            errorElement.style.display = "block";
+            return;
+        }
+
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Registering...";
+
+        try {
+            const response = await fetch("/admin/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ fullName, email, password }),
+                credentials: "include"
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Registration failed");
+            }
+
+            // Always redirect to login page after successful registration
+            errorElement.textContent = "Registration successful! Redirecting to login...";
+            errorElement.style.color = "green";
+            errorElement.style.display = "block";
+            
+            setTimeout(() => {
+                // Show login form with admin tab active
+                document.querySelector('.admin-register').style.display = 'none';
+                loginContainer.style.display = 'block';
+                roleTabs.forEach(tab => tab.classList.remove('active'));
+                document.querySelector('.role-tab[data-role="admin"]').classList.add('active');
+                loginForms.forEach(form => form.classList.remove('active'));
+                document.querySelector('.login-form[data-role="admin"]').classList.add('active');
+                wrapper.classList.remove('active');
+            }, 1500);
+        } catch (error) {
+            errorElement.textContent = `Registration failed: ${error.message}`;
+            errorElement.style.display = "block";
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = originalBtnText;
@@ -385,3 +503,4 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("rememberMe").checked = true;
     }
 });
+
