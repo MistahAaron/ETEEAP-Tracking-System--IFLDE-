@@ -13,8 +13,8 @@
     --sidebar-width: 250px;
 }
 
-  /* Main Content Styles */
-  body {
+/* Main Content Styles */
+body {
     background-image: url('/images/background.png');
     background-size: cover;
     background-position: center;
@@ -38,8 +38,8 @@
 
 /* Remove default link styling for nav items */
 .sidebar .nav-item a {
-  color: inherit; /* Inherits the color from parent */
-  text-decoration: none; /* Removes underline */
+  color: inherit;
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -47,10 +47,9 @@
   height: 100%;
 }
 
-/* If you want to maintain the hover effect */
 .sidebar .nav-item:hover a,
 .sidebar .nav-item.active a {
-  color: white; /* Or your desired hover color */
+  color: white;
 }
 
 .iflde {
@@ -68,7 +67,6 @@
 }
 
 .nav-item {
-/* Your existing styles */
   padding: 12px 15px;
   margin: 5px 0;
   border-radius: 8px;
@@ -125,21 +123,81 @@
     width: 100%;
 }
 
-/* User Profile Dropdown Styles */
-.user-profile {
-position: relative;
-display: flex;
-align-items: center;
-gap: 10px;
+/* Sort Dropdown Styles */
+.sort-dropdown {
+  position: relative;
+  display: inline-block;
 }
 
-.profile-dropdown {
-position: relative;
-display: flex;
-align-items: center;
-gap: 8px;
-cursor: pointer;
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
+
+.sort-btn:hover {
+  background-color: #e2e8f0;
+}
+
+.sort-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  z-index: 100;
+  display: none;
+  overflow: hidden;
+}
+
+.sort-dropdown:hover .sort-options {
+  display: block;
+}
+
+.sort-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.sort-option:hover {
+  background-color: #f8fafc;
+  color: var(--primary-color);
+}
+
+.sort-divider {
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 5px 0;
+}
+
+/* User Profile Dropdown Styles */
+.user-profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .profile-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
 
 .dropdown-toggle {
 width: 16px;

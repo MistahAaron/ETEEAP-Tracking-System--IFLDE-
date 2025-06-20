@@ -43,6 +43,77 @@ function initializeEventListeners() {
   // Initialize dropdown and logout
   initializeDropdown();
   initializeLogout();
+  initializeSortDropdown();
+}
+
+// Initialize sort dropdown
+function initializeSortDropdown() {
+  const sortBtn = document.querySelector('.sort-btn');
+  const sortOptions = document.querySelector('.sort-options');
+
+  if (sortBtn && sortOptions) {
+    sortBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sortOptions.style.display = sortOptions.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', () => {
+      sortOptions.style.display = 'none';
+    });
+
+    document.querySelectorAll('.sort-option').forEach(option => {
+      option.addEventListener('click', (e) => {
+        const sortType = e.target.getAttribute('data-sort');
+        handleSort(sortType);
+        sortOptions.style.display = 'none';
+      });
+    });
+  }
+}
+
+// Handle sorting
+function handleSort(sortType) {
+  if (!assessors || assessors.length === 0) return;
+
+  let sortedAssessors = [...assessors];
+  let sortMessage = '';
+
+  switch (sortType) {
+    case 'id-asc':
+      sortedAssessors.sort((a, b) => (a.assessorId || '').localeCompare(b.assessorId || ''));
+      sortMessage = 'Sorted by ID (Low to High)';
+      break;
+    case 'id-desc':
+      sortedAssessors.sort((a, b) => (b.assessorId || '').localeCompare(a.assessorId || ''));
+      sortMessage = 'Sorted by ID (High to Low)';
+      break;
+    case 'type-internal':
+      sortedAssessors = sortedAssessors.filter(assessor => 
+        assessor.assessorType.toLowerCase() === 'internal');
+      sortMessage = 'Showing Internal Assessors';
+      break;
+    case 'type-external':
+      sortedAssessors = sortedAssessors.filter(assessor => 
+        assessor.assessorType.toLowerCase() === 'external');
+      sortMessage = 'Showing External Assessors';
+      break;
+    case 'applicants-asc':
+      sortedAssessors.sort((a, b) => (a.applicantsCount || 0) - (b.applicantsCount || 0));
+      sortMessage = 'Sorted by Applicants Count (Low to High)';
+      break;
+    case 'applicants-desc':
+      sortedAssessors.sort((a, b) => (b.applicantsCount || 0) - (a.applicantsCount || 0));
+      sortMessage = 'Sorted by Applicants Count (High to Low)';
+      break;
+    default:
+      break;
+  }
+
+  renderAssessorTable(sortedAssessors);
+  
+  if (sortMessage) {
+    showNotification(sortMessage, 'info');
+  }
 }
 
 // ======================
@@ -320,7 +391,6 @@ async function handleFormSubmit(e) {
 }
 
 // UI Rendering
-// Update the renderAssessorTable function to show more detailed information
 function renderAssessorTable(assessorsToRender) {
   if (!assessorTableBody) return;
 
@@ -339,7 +409,7 @@ function renderAssessorTable(assessorsToRender) {
     return;
   }
 
-assessorsToRender.forEach((assessor) => {
+  assessorsToRender.forEach((assessor) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${assessor.assessorId || 'N/A'}</td>
@@ -361,7 +431,7 @@ assessorsToRender.forEach((assessor) => {
       </td>
     `;
     assessorTableBody.appendChild(row);
-});
+  });
 }
 
 // Add this new function to format expertise
@@ -607,18 +677,6 @@ function exportToExcel() {
   }
 }
 
-// Helper function to show notifications
-function showNotification(message, type) {
-  const notification = document.getElementById('notification');
-  notification.textContent = message;
-  notification.style.display = 'block';
-  notification.style.backgroundColor = type === 'success' ? '#4CAF50' : '#f44336';
-  
-  setTimeout(() => {
-    notification.style.display = 'none';
-  }, 3000);
-}
-
 // Make functions available globally
 window.editAssessor = editAssessor;
 window.deleteAssessor = deleteAssessor;
@@ -628,4 +686,3 @@ window.closeDeleteModal = closeDeleteModal;
 window.openAssessorModal = openAssessorModal;
 window.handleLogout = handleLogout;
 window.viewAssessor = viewAssessor;
-
