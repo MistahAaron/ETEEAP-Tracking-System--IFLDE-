@@ -162,7 +162,7 @@ async function handleLogout() {
 }
 
 function redirectToLogin() {
-  window.location.href = '/frontend/Admin/login/login.html';
+  window.location.href = '/frontend/admin/login/login.html';
 }
 
 function clearAuthData() {

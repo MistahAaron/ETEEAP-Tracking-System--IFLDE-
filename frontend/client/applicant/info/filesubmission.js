@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!userId) {
     showAlert("Session expired. Please login again.", "error");
     setTimeout(() => {
-      window.location.href = "/client/Applicant/Login/login.html";
+      window.location.href = "/client/applicant/login/login.html";
     }, 2000);
     return;
   }

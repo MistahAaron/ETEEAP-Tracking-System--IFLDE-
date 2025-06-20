@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     if (!authData.authenticated) {
-      window.location.href = "../Login/login.html";
+      window.location.href = "../login/login.html";
       return;
     }
 
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         localStorage.clear();
 
         // Redirect to login page
-        window.location.href = "../Login/login.html";
+        window.location.href = "../login/login.html";
       } else {
         throw new Error("Logout failed");
       }
@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           "error"
         );
         setTimeout(() => {
-          window.location.href = "../Login/login.html";
+          window.location.href = "../login/login.html";
         }, 2000);
         return;
       }
