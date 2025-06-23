@@ -343,10 +343,10 @@ function handleSearch(e) {
 
     const filteredApplicants = applicants.filter(
       (applicant) =>
-        applicant.name.toLowerCase().includes(searchTerm) ||
-        (applicant.email &&
-          applicant.email.toLowerCase().includes(searchTerm)) ||
-        applicant.course.toLowerCase().includes(searchTerm)
+        (applicant.applicantId && applicant.applicantId.toLowerCase().includes(searchTerm)) ||
+        (applicant.name && applicant.name.toLowerCase().includes(searchTerm)) ||
+        (applicant.email && applicant.email.toLowerCase().includes(searchTerm)) ||
+        (applicant.course && applicant.course.toLowerCase().includes(searchTerm))
     );
 
     renderApplicantTable(filteredApplicants);
