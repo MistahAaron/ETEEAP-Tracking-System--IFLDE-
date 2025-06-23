@@ -101,49 +101,48 @@
       <!-- Dashboard Section -->
       <div id="dashboardSection" class="section dashboard active">
         <div class="dashboard-cards">
-          <div class="card">
+          <div class="card status-filter" data-status="all">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-users"></i>
               </div>
             </div>
             <div class="card-title">Total Applicants</div>
-            <div class="card-value" id="totalApplicants">0</div> <!-- Added ID here -->
+            <div class="card-value" id="totalApplicants">0</div>
           </div>
-          <div class="card">
+          <div class="card status-filter" data-status="pending">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-book"></i>
               </div>
             </div>
             <div class="card-title">New Applicants</div>
-            <div class="card-value">0</div>
+            <div class="card-value" id="newApplicantsCount">0</div>
           </div>
-          <div class="card">
+          <div class="card status-filter" data-status="unassigned">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-graduation-cap"></i>
               </div>
             </div>
             <div class="card-title">Applicants w/o Assessor</div>
-            <div class="card-value">0</div>
+            <div class="card-value" id="withoutAssessorCount">0</div>
           </div>
-          <div class="card">
+          <div class="card status-filter" data-status="rejected">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-chart-line"></i>
               </div>
             </div>
             <div class="card-title">Rejected</div>
-            <div class="card-value">0</div>
+            <div class="card-value" id="rejectedCount">0</div>
           </div>
         </div>
 
         <!---Student List in Dashboard-->
         <div class="student-list">
           <div class="table-header">
-            <h2>Recent Applicants</h2>
-            </button>
+            <h2 id="currentFilterTitle">Recent Applicants</h2>
           </div>
           <table>
             <thead>

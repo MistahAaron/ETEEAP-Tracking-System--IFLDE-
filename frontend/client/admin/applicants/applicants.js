@@ -30,6 +30,9 @@ async function fetchApplicants() {
       // Store applicants locally for search and sorting
       applicants = data.data;
       
+      // Log all status values for debugging
+      console.log('All status values:', [...new Set(applicants.map(app => app.status))]);
+      
       // Update the total applicants counter in sessionStorage
       sessionStorage.setItem('totalApplicants', applicants.length);
       
@@ -97,7 +100,7 @@ function renderApplicantsTable(applicants) {
       <td>${formattedDate}</td>
       <td>${applicant.currentScore || 0}</td>
       <td>
-        <span class="status-badge status-${applicant.status.toLowerCase().replace(' ', '-')}">
+        <span class="status-badge status-${applicant.status.toLowerCase().replace(/\s+/g, '-')}">
           ${applicant.status}
         </span>
       </td>
@@ -248,16 +251,23 @@ function handleSort(sortType) {
       break;
     case 'status-pending':
       sortedApplicants = sortedApplicants.filter(app => 
-        app.status.toLowerCase().includes('pending'));
+        /pending/i.test(app.status));
       break;
     case 'status-under-assessment':
       sortedApplicants = sortedApplicants.filter(app => 
-        app.status.toLowerCase().includes('under assessment'));
+        /under[\s-]?assessment/i.test(app.status));
       break;
     case 'status-evaluated-pass':
       sortedApplicants = sortedApplicants.filter(app => 
-        app.status.toLowerCase().includes('evaluated-pass') || 
-        app.status.toLowerCase().includes('evaluated pass'));
+        /evaluated[\s-]?pass/i.test(app.status) || 
+        /passed/i.test(app.status) ||
+        /pass/i.test(app.status));
+      break;
+    case 'status-evaluated-failed':
+      sortedApplicants = sortedApplicants.filter(app => 
+        /evaluated[\s-]?fail/i.test(app.status) || 
+        /failed/i.test(app.status) ||
+        /fail/i.test(app.status));
       break;
     default:
       break;
@@ -274,6 +284,7 @@ function handleSort(sortType) {
     case 'status-pending': sortMessage = 'Showing Pending Review applicants'; break;
     case 'status-under-assessment': sortMessage = 'Showing Under Assessment applicants'; break;
     case 'status-evaluated-pass': sortMessage = 'Showing Evaluated-Pass applicants'; break;
+    case 'status-evaluated-failed': sortMessage = 'Showing Evaluated-Failed applicants'; break;
   }
   
   if (sortMessage) {
@@ -492,31 +503,26 @@ function showNotification(message, type = "info") {
 document.addEventListener("DOMContentLoaded", function() {
   const exportBtn = document.getElementById("export-btn");
   
-  exportBtn.addEventListener("click", function() {
-    const table = document.querySelector("#studentsSection table");
-    const clonedTable = table.cloneNode(true);
-    
-    const rows = clonedTable.querySelectorAll("tr");
-    rows.forEach((row) => {
-      if (row.lastElementChild) {
-        row.removeChild(row.lastElementChild);
-      }
+  if (exportBtn) {
+    exportBtn.addEventListener("click", function() {
+      const table = document.querySelector("#studentsSection table");
+      const clonedTable = table.cloneNode(true);
+      
+      const rows = clonedTable.querySelectorAll("tr");
+      rows.forEach((row) => {
+        if (row.lastElementChild) {
+          row.removeChild(row.lastElementChild);
+        }
+      });
+      
+      const ws = XLSX.utils.table_to_sheet(clonedTable);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Applicants");
+      XLSX.writeFile(wb, "applicants.xlsx");
+      
+      showNotification("Export successful!", "success");
     });
-    
-    const ws = XLSX.utils.table_to_sheet(clonedTable);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Applicants");
-    XLSX.writeFile(wb, "applicants.xlsx");
-    
-    const notification = document.getElementById("notification");
-    notification.textContent = "Export successful!";
-    notification.style.display = "block";
-    notification.style.backgroundColor = "#4CAF50";
-    
-    setTimeout(() => {
-      notification.style.display = "none";
-    }, 3000);
-  });
+  }
 });
 
 // Debounce function

@@ -1,5 +1,6 @@
 const API_BASE_URL = "http://localhost:3000";
 let applicants = [];
+let currentFilter = 'all';
 
 // DOM Elements
 const studentTableBody = document.getElementById("studentTableBody");
@@ -7,6 +8,7 @@ const searchInput = document.getElementById("searchInput");
 const loadingSpinner = document.getElementById("loadingSpinner");
 const logoutLink = document.getElementById("logoutLink");
 const totalApplicantsElement = document.getElementById("totalApplicants");
+const filterCards = document.querySelectorAll('.status-filter');
 
 // Initialize the dashboard
 document.addEventListener("DOMContentLoaded", async () => {
@@ -20,11 +22,37 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// In applicant dashboard.js, update the fetchApplicants function:
+// Initialize event listeners
+function initializeEventListeners() {
+  // Search input
+  if (searchInput) {
+    searchInput.addEventListener("input", debounce(handleSearch, 300));
+  }
+
+  // Logout link
+  if (logoutLink) {
+    logoutLink.addEventListener("click", async (e) => {
+      e.preventDefault();
+      await handleLogout();
+    });
+  }
+
+  // Filter cards
+  filterCards.forEach(card => {
+    card.addEventListener('click', function() {
+      filterCards.forEach(c => c.classList.remove('active-filter'));
+      this.classList.add('active-filter');
+      currentFilter = this.dataset.status;
+      updateTableTitle();
+      filterApplicants();
+    });
+  });
+}
+
+// Fetch applicants
 async function fetchApplicants() {
   showLoading();
   try {
-    // Fetch all applicants without limit
     const response = await fetch(`${API_BASE_URL}/api/admin/applicants`, {
       credentials: "include",
     });
@@ -34,77 +62,88 @@ async function fetchApplicants() {
     const data = await response.json();
 
     if (data.success && data.data) {
-      // Store ALL applicants for statistics
       applicants = data.data;
-
-      // Update counters with all applicants
       updateDashboardStats();
-
-      // Then render only recent applicants (limit to 5)
-      const recentApplicants = applicants.slice(0, 5);
-      renderApplicantsTable(recentApplicants);
-
-      // Store the total count in sessionStorage for cross-page consistency
+      filterApplicants();
       sessionStorage.setItem("totalApplicants", applicants.length);
     } else {
-      applicants = []; // Clear applicants array if no data
+      applicants = [];
       renderEmptyState();
-      updateDashboardStats(); // This will set all counters to 0
+      updateDashboardStats();
       sessionStorage.setItem("totalApplicants", "0");
     }
   } catch (error) {
     console.error("Error:", error);
     showNotification(error.message, "error");
-    applicants = []; // Clear applicants array on error
+    applicants = [];
     renderEmptyState();
-    updateDashboardStats(); // This will set all counters to 0
+    updateDashboardStats();
     sessionStorage.setItem("totalApplicants", "0");
   } finally {
     hideLoading();
   }
 }
 
-// Update the updateDashboardStats function:
-// Update the updateDashboardStats function:
+// Filter applicants based on current filter
+function filterApplicants() {
+  let filteredApplicants = [];
+  
+  switch(currentFilter) {
+    case 'pending':
+      filteredApplicants = applicants.filter(a => 
+        a.status && a.status.toLowerCase() === "pending"
+      );
+      break;
+    case 'unassigned':
+      filteredApplicants = applicants.filter(a => 
+        !a.assessorId || a.assessorId === ""
+      );
+      break;
+    case 'rejected':
+      filteredApplicants = applicants.filter(a => 
+        a.status && a.status.toLowerCase() === "rejected"
+      );
+      break;
+    default:
+      filteredApplicants = applicants.slice(0, 5); // Show recent 5 for 'all'
+  }
+  
+  renderApplicantsTable(filteredApplicants);
+}
+
+// Update dashboard statistics
 function updateDashboardStats() {
-  // Update the total applicants counter directly
+  // Update the total applicants counter
   if (totalApplicantsElement) {
     totalApplicantsElement.textContent = applicants.length;
   }
 
   // Calculate other statistics
   const newApplicantsCount = applicants.filter(
-    (a) => a.status && a.status.toLowerCase() === "pending"
+    a => a.status && a.status.toLowerCase() === "pending"
   ).length;
   const withoutAssessorCount = applicants.filter(
-    (a) => !a.assessorId || a.assessorId === ""
+    a => !a.assessorId || a.assessorId === ""
   ).length;
   const rejectedCount = applicants.filter(
-    (a) => a.status && a.status.toLowerCase() === "rejected"
+    a => a.status && a.status.toLowerCase() === "rejected"
   ).length;
 
-  // Update other counters by their position in the DOM
-  const cardValues = document.querySelectorAll(".card-value");
-  if (cardValues.length >= 4) {
-    cardValues[1].textContent = newApplicantsCount; // New Applicants
-    cardValues[2].textContent = withoutAssessorCount; // Applicants w/o Assessor
-    cardValues[3].textContent = rejectedCount; // Rejected Applicants
-  }
-}
-// Helper function to update counters by class and index
-function updateCounterByClass(className, index, value) {
-  const elements = document.getElementsByClassName(className);
-  if (elements && elements.length > index) {
-    elements[index].textContent = value;
-  }
+  // Update counters
+  document.getElementById("newApplicantsCount").textContent = newApplicantsCount;
+  document.getElementById("withoutAssessorCount").textContent = withoutAssessorCount;
+  document.getElementById("rejectedCount").textContent = rejectedCount;
 }
 
-// Remove the old updateCounter function and replace it with this:
-function updateCounter(id, value) {
-  const element = document.getElementById(id);
-  if (element) {
-    element.textContent = value;
-  }
+// Update table title based on current filter
+function updateTableTitle() {
+  const titleMap = {
+    'all': 'Recent Applicants',
+    'pending': 'Pending Applicants',
+    'unassigned': 'Applicants Without Assessor',
+    'rejected': 'Rejected Applicants'
+  };
+  document.getElementById('currentFilterTitle').textContent = titleMap[currentFilter] || 'Recent Applicants';
 }
 
 // Render applicants table
@@ -162,43 +201,24 @@ function renderApplicantsTable(applicantsToRender) {
   addActionButtonListeners();
 }
 
-// In Applicant Dashboard.js, update the fetchApplicants function:
-async function fetchApplicants() {
-  showLoading();
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/admin/applicants`, {
-      credentials: "include",
-    });
+// Handle search functionality
+function handleSearch(e) {
+  const searchTerm = e.target.value.trim().toLowerCase();
 
-    if (!response.ok) throw new Error("Failed to fetch applicants");
-
-    const data = await response.json();
-
-    if (data.success && data.data) {
-      applicants = data.data;
-      updateDashboardStats(); // This will update all counters
-
-      // Render only recent applicants (limit to 5)
-      const recentApplicants = applicants.slice(0, 5);
-      renderApplicantsTable(recentApplicants);
-
-      sessionStorage.setItem("totalApplicants", applicants.length);
-    } else {
-      applicants = [];
-      renderEmptyState();
-      updateDashboardStats(); // This will reset all counters to 0
-      sessionStorage.setItem("totalApplicants", "0");
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    showNotification(error.message, "error");
-    applicants = [];
-    renderEmptyState();
-    updateDashboardStats();
-    sessionStorage.setItem("totalApplicants", "0");
-  } finally {
-    hideLoading();
+  if (!searchTerm) {
+    filterApplicants(); // Show filtered applicants when search is empty
+    return;
   }
+
+  const filtered = applicants.filter((applicant) => {
+    return (
+      (applicant.name && applicant.name.toLowerCase().includes(searchTerm)) ||
+      (applicant.applicantId && applicant.applicantId.toLowerCase().includes(searchTerm)) ||
+      (applicant.course && applicant.course.toLowerCase().includes(searchTerm))
+    );
+  });
+
+  renderApplicantsTable(filtered);
 }
 
 // Add event listeners to action buttons
@@ -289,34 +309,10 @@ function renderEmptyState() {
       <td colspan="7" class="empty-state">
         <i class="fas fa-users"></i>
         <h3>No Applicants Found</h3>
-        <p>Applicants will appear here when available</p>
+        <p>No applicants match the current criteria</p>
       </td>
     </tr>
   `;
-}
-
-// Handle search functionality
-async function handleSearch(e) {
-  const searchTerm = e.target.value.trim().toLowerCase();
-
-  if (!searchTerm) {
-    // If search is empty, show recent applicants again
-    const recentApplicants = [...applicants].slice(0, 5);
-    renderApplicantsTable(recentApplicants);
-    return;
-  }
-
-  // Filter locally from the full applicants list
-  const filtered = applicants.filter((applicant) => {
-    return (
-      (applicant.name && applicant.name.toLowerCase().includes(searchTerm)) ||
-      (applicant.applicantId &&
-        applicant.applicantId.toLowerCase().includes(searchTerm)) ||
-      (applicant.course && applicant.course.toLowerCase().includes(searchTerm))
-    );
-  });
-
-  renderApplicantsTable(filtered.slice(0, 5)); // Still show max 5 results
 }
 
 // Debounce function for search input
@@ -326,22 +322,6 @@ function debounce(func, wait) {
     clearTimeout(timeout);
     timeout = setTimeout(() => func.apply(this, args), wait);
   };
-}
-
-// Initialize all event listeners
-function initializeEventListeners() {
-  // Search input
-  if (searchInput) {
-    searchInput.addEventListener("input", debounce(handleSearch, 300));
-  }
-
-  // Logout link
-  if (logoutLink) {
-    logoutLink.addEventListener("click", async (e) => {
-      e.preventDefault();
-      await handleLogout();
-    });
-  }
 }
 
 // Load admin info
