@@ -498,3 +498,22 @@ tr:hover {
 .notification.info {
   background-color: #2196f3;
 }
+
+/* Add this to your existing CSS */
+.export-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.export-button:hover {
+  background-color: #45a049;
+}

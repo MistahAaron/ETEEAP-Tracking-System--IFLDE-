@@ -492,3 +492,31 @@ async function handleLogout() {
 window.viewApplicant = viewApplicant;
 window.rejectApplicant = rejectApplicant;
 window.handleLogout = handleLogout;
+
+// Add this to your existing JavaScript code, at the bottom of the file
+document.addEventListener("DOMContentLoaded", function() {
+  const exportBtn = document.getElementById("export-btn");
+  
+  if (exportBtn) {
+    exportBtn.addEventListener("click", function() {
+      const table = document.querySelector("#applicantsSection table");
+      const clonedTable = table.cloneNode(true);
+      
+      // Remove action column from exported data
+      const rows = clonedTable.querySelectorAll("tr");
+      rows.forEach((row) => {
+        if (row.lastElementChild) {
+          row.removeChild(row.lastElementChild);
+        }
+      });
+      
+      // Create workbook and export
+      const ws = XLSX.utils.table_to_sheet(clonedTable);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Applicants");
+      XLSX.writeFile(wb, "assigned_applicants.xlsx");
+      
+      showNotification("Export successful!", "success");
+    });
+  }
+});
