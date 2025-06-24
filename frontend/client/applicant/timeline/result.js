@@ -176,7 +176,7 @@ function showNotification(message, type = 'error') {
 }
 
 function redirectToLogin() {
-    window.location.href = '/frontend/Applicant/login/login.html';
+    window.location.href = '/client/applicant/login/login.html';
 }
 
 // Logout functionality
@@ -190,7 +190,7 @@ document.getElementById('logout')?.addEventListener('click', async (e) => {
         });
         
         if (response.ok) {
-            window.location.href = '/frontend/Applicant/login/login.html';
+            window.location.href = '/frontend/applicant/login/login.html';
         } else {
             throw new Error('Logout failed');
         }

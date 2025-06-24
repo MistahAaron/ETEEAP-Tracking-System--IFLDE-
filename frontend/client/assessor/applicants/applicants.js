@@ -435,7 +435,7 @@ async function loadAssessorInfo() {
       updateUserDisplay(data.user);
       sessionStorage.setItem("assessorData", JSON.stringify(data.user));
     } else {
-      window.location.href = "assessor/login/login.html";
+      window.location.href = "/client/applicant/login/login.html";
     }
   } catch (error) {
     console.error("Error loading assessor info:", error);
@@ -443,7 +443,7 @@ async function loadAssessorInfo() {
     if (storedData) {
       updateUserDisplay(JSON.parse(storedData));
     } else {
-      window.location.href = "login/login.html";
+      window.location.href = "/client/applicant/login/login.html";
     }
   }
 }
@@ -457,7 +457,7 @@ async function handleLogout() {
 
     if (!authCheck.ok) {
       sessionStorage.removeItem("assessorData");
-      window.location.href = "login/login.html";
+      window.location.href = "/client/applicant/login/login.html";
       return;
     }
 
@@ -475,7 +475,7 @@ async function handleLogout() {
       sessionStorage.removeItem("assessorData");
       setTimeout(() => {
         window.location.href =
-          data.redirectTo || "login/login.html";
+          data.redirectTo || "/client/applicant/login/login.html"; 
       }, 1500);
     } else {
       showNotification("Logout failed. Please try again.", "error");

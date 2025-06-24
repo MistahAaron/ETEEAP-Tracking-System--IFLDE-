@@ -18,7 +18,7 @@ class NavProfile {
     const authData = await authResponse.json();
 
     if (!authData.authenticated) {
-      window.location.href = "../Login/login.html";
+      window.location.href = "../login/login.html";
       return;
     }
 

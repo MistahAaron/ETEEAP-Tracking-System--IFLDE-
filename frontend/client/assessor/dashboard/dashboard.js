@@ -314,11 +314,11 @@ async function loadAssessorInfo() {
     if (data.authenticated && data.user) {
       updateUserDisplay(data.user);
     } else {
-      window.location.href = '/client/assessor/login/login.html';
+      window.location.href = '/client/applicant/login/login.html';
     }
   } catch (error) {
     console.error('Error loading assessor info:', error);
-    window.location.href = '/client/assessor/login/login.html';
+    window.location.href = '/client/applicant/login/login.html';
   }
 }
 
@@ -388,7 +388,7 @@ async function handleLogout() {
     if (data.success) {
       showNotification('Logout successful! Redirecting...', 'success');
       setTimeout(() => {
-        window.location.href = '/client/assessor/login/login.html';
+        window.location.href = '/client/applicant/login/login.html';
       }, 1500);
     } else {
       throw new Error(data.error || 'Logout failed');
