@@ -144,6 +144,7 @@ header {
   transform: translate(-50%, -50%);
   width: 90%;
   max-width: 400px;
+  max-height: 500px;
   background: transparent;
   border-radius: 20px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
@@ -153,7 +154,6 @@ header {
   padding: 20px 0;
 }
 
-
 .wrapper.active-popup {
   transform: scale(1);
   transition: 0.7s ease-in-out;
@@ -161,7 +161,7 @@ header {
 
 .wrapper.active {
  height: auto;
-  min-height: 460px;
+  min-height: 500px;
 }
 
 /* Form Box */
@@ -170,7 +170,6 @@ header {
   padding: 20px 40px;
   transition: all 0.3s ease;
 }
-
 
 /* Login Form */
 .wrapper .form-box.login {
@@ -222,15 +221,22 @@ header {
 }
 
 /* Register Form */
-.wrapper .form-box.register,
 .wrapper .form-box.admin-register {
   position: absolute;
-  top: 0;
+  top: 3%;
   left: 0;
   transform: translateX(100%);
   opacity: 0;
 }
  
+.wrapper .form-box.register {
+  position: absolute;
+  top: 5%;
+  left: 0;
+  transform: translateX(100%);
+  opacity: 0;
+  margin-bottom: 0px;
+}
 
 .wrapper.active .form-box.register,
 .wrapper.active .form-box.admin-register {
@@ -364,7 +370,7 @@ input::-ms-clear {
 
 .input-box label {
   position: absolute;
-  top: -15px; /* Start above the input */
+  top: -20px; /* Start above the input */
   left: 5px;
   font-size: 1em;
   color: #fff;
@@ -387,10 +393,9 @@ input::-ms-clear {
   font-weight: 600;
 }
 
-
 .input-box input:not(:placeholder-shown) ~ label {
   top: -20px;
-  color: #532989;
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -447,7 +452,7 @@ input::-ms-clear {
   font-size: 1rem;
   color: #fff;
   font-weight: 500;
-  margin: -15px 0 15px;
+  margin: 20px 0 20px;
   display: flex;
 }
 
@@ -457,7 +462,13 @@ input::-ms-clear {
   font-weight: bold;
 }
 
-#terms-link:hover {
+#admin-terms-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#terms-link:hover, #admin-terms-link:hover {
   color: #532989;
 }
 
@@ -576,7 +587,7 @@ input::-ms-clear {
   color: #fff;
   text-align: center;
   font-weight: 500;
-  margin: 25px 0 10px;
+  margin: 10px 0 0px;
 }
 
 .login-register p a {
@@ -686,10 +697,12 @@ input::-ms-clear {
   transform: translateX(100%);
   opacity: 0;
 }
+
 .wrapper.active-new-password .form-box.new-password {
  transform: translateX(0);
   opacity: 1;
 }
+
 .wrapper.active-new-password .form-box.verification {
   transform: translateX(-400px);
   opacity: 0;
@@ -770,6 +783,49 @@ input::-ms-clear {
   margin-top: 10px;
   text-align: center;
   display: none;
+}
+
+/* Remember Me Container */
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -10px 0 15px;
+  font-size: 0.95rem;
+}
+
+/* Checkbox Style */
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #532989;
+  cursor: pointer;
+}
+
+/* Label Style */
+.remember-me label {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.cancel-icon {
+  position: fixed;
+  top: -7px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  display: fixed;
+  color: #532989;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.cancel-icon ion-icon {
+  pointer-events: none;
 }
 
 /* Responsive Design */
