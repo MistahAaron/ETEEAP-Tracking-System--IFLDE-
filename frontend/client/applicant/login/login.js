@@ -504,3 +504,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+function goBackToLogin() {
+  const wrapper = document.querySelector(".wrapper");
+  wrapper.classList.remove("active");
+  wrapper.classList.remove("active-popup");
+
+  const allForms = document.querySelectorAll(".form-box");
+  allForms.forEach(form => form.style.display = "none");
+
+  const loginFormBox = document.querySelector(".form-box.login");
+  loginFormBox.style.display = "block";
+}
