@@ -1,6 +1,14 @@
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const wrapper = document.querySelector('.wrapper');
     const loginContainer = document.querySelector('.form-box.login');
+    
+    // OTP related variables
+    let otpEmail = '';
+    let otpTimer;
+    let registrationData = {}; // To store registration data before OTP verification
     
     // Role tab handling
     const roleTabs = document.querySelectorAll('.role-tab');
@@ -20,10 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector('.register').style.display = 'none';
         document.querySelector('.admin-register').style.display = 'none';
         document.querySelector('.forgot').style.display = 'none';
+        document.querySelector('.otp-verification').style.display = 'none';
         if (document.getElementById('verificationForm')) document.getElementById('verificationForm').style.display = 'none';
         if (document.getElementById('newPasswordForm')) document.getElementById('newPasswordForm').style.display = 'none';
         
-        wrapper.classList.remove('active', 'active-forgot', 'active-verification', 'active-new-password');
+        wrapper.classList.remove('active', 'active-forgot', 'active-verification', 'active-new-password', 'active-otp');
     }
     
     initForms();
@@ -206,7 +215,137 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 2000);
     });
 
-    // Applicant Registration (UNCHANGED)
+    // Generate OTP function
+    function generateOTP() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    // Start OTP timer function
+    function startOTPTimer() {
+        const otpTimerElement = document.getElementById('otpTimer');
+        const countdownElement = document.getElementById('countdown');
+        const resendLink = document.getElementById('resendOtpLink');
+        
+        otpTimerElement.style.display = 'block';
+        resendLink.style.display = 'none';
+        
+        let timeLeft = 60;
+        
+        otpTimer = setInterval(() => {
+            timeLeft--;
+            countdownElement.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(otpTimer);
+                otpTimerElement.style.display = 'none';
+                resendLink.style.display = 'inline';
+            }
+        }, 1000);
+    }
+
+    // Handle OTP input
+    document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
+        input.addEventListener('input', (e) => {
+            // Auto-focus next input
+            if (e.target.value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+            
+            // Update hidden input with full OTP
+            const otp = Array.from(inputs).map(i => i.value).join('');
+            document.getElementById('fullOtp').value = otp;
+        });
+        
+        input.addEventListener('keydown', (e) => {
+            // Handle backspace to move to previous input
+            if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+    });
+
+    // Resend OTP handler
+    document.getElementById('resendOtpLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        sendOTP(otpEmail);
+    });
+
+    // Send OTP function
+    async function sendOTP(email) {
+        const otp = generateOTP();
+        showNotification(`OTP sent to ${email} (Demo OTP: ${otp})`, 'success');
+        
+        // Store the OTP in localStorage for verification
+        localStorage.setItem('otp', otp);
+        otpEmail = email;
+        
+        // Start the resend timer
+        startOTPTimer();
+        
+        // Show OTP form
+        document.querySelectorAll('.form-box').forEach(form => {
+            form.style.display = 'none';
+        });
+        document.querySelector('.otp-verification').style.display = 'block';
+        wrapper.classList.add('active-otp');
+        
+        // Clear any previous OTP inputs
+        document.querySelectorAll('.otp-input').forEach(input => {
+            input.value = '';
+        });
+        document.getElementById('fullOtp').value = '';
+    }
+
+    // OTP verification form submit handler
+    document.getElementById('otpVerificationForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const enteredOTP = document.getElementById('fullOtp').value;
+        const storedOTP = localStorage.getItem('otp');
+        
+        if (enteredOTP.length !== 6) {
+            showNotification('Please enter a complete 6-digit OTP', 'error');
+            return;
+        }
+        
+        if (enteredOTP === storedOTP) {
+            showNotification('OTP verified successfully!', 'success');
+            
+            // Clear OTP from storage
+            localStorage.removeItem('otp');
+            clearInterval(otpTimer);
+            
+            // Proceed with registration
+            try {
+                const response = await fetch("/api/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(registrationData),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.details || data.error || "Registration failed");
+                }
+
+                showNotification("Registration successful! Please fill out your personal information.", "success");
+                localStorage.setItem("userId", data.data.userId);
+                localStorage.setItem("applicantId", data.data.applicantId);
+                window.location.href = "/client/applicant/info/information.html";
+            } catch (error) {
+                showNotification(`Registration failed: ${error.message}`, "error");
+                // Go back to registration form if OTP was correct but registration failed
+                document.querySelector('.otp-verification').style.display = 'none';
+                document.querySelector('.register').style.display = 'block';
+                wrapper.classList.remove('active-otp');
+                wrapper.classList.add('active');
+            }
+        } else {
+            showNotification('Invalid OTP. Please try again.', 'error');
+        }
+    });
+
+    // Modified Applicant Registration to include OTP
     document.getElementById("registerForm")?.addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = document.getElementById("regEmail").value.trim().toLowerCase();
@@ -238,37 +377,14 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Registering...";
+        // Store registration data for after OTP verification
+        registrationData = { email, password };
 
-        try {
-            const response = await fetch("/api/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.details || data.error || "Registration failed");
-            }
-
-            showNotification("Registration successful! Please fill out your personal information.", "success");
-            localStorage.setItem("userId", data.data.userId);
-            localStorage.setItem("applicantId", data.data.applicantId);
-            window.location.href = "/client/applicant/info/information.html";
-        } catch (error) {
-            showNotification(`Registration failed: ${error.message}`, "error");
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalBtnText;
-        }
+        // Send OTP instead of registering immediately
+        sendOTP(email);
     });
 
-    // Admin Registration (NEW)
+    // Admin Registration
     document.getElementById("adminRegisterForm")?.addEventListener("submit", async (e) => {
         e.preventDefault();
         const fullName = document.getElementById("admin-full-name").value.trim();
@@ -503,4 +619,5 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("rememberMe").checked = true;
     }
 });
+
 

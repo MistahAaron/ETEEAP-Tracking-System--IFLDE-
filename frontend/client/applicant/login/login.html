@@ -113,7 +113,29 @@
             </form>
         </div>
         
-        <!-- Applicant Registration Form (UNCHANGED) -->
+        <!-- OTP Verification Form -->
+          <div class="form-box otp-verification">
+            <h2>OTP Verification</h2>
+            <p>We've sent a verification code to your email</p>
+            <form id="otpVerificationForm">
+                <div class="otp-container">
+                    <input type="text" maxlength="1" class="otp-input" required>
+                    <input type="text" maxlength="1" class="otp-input" required>
+                    <input type="text" maxlength="1" class="otp-input" required>
+                    <input type="text" maxlength="1" class="otp-input" required>
+                    <input type="text" maxlength="1" class="otp-input" required>
+                    <input type="text" maxlength="1" class="otp-input" required>
+                </div>
+                <input type="hidden" id="fullOtp">
+                <div class="resend-otp">
+                    <p>Didn't receive code? <a href="#" id="resendOtpLink">Resend OTP</a></p>
+                    <p id="otpTimer" style="display: none;">Resend OTP in <span id="countdown">60</span> seconds</p>
+                </div>
+                <button type="submit" class="btn">Verify</button>
+            </form>
+        </div>
+        
+        <!-- Applicant Registration Form -->
         <div class="form-box register">
             <h2>Applicant Registration</h2>
             <form id="registerForm">
@@ -146,7 +168,7 @@
             </form>
         </div>
         
-        <!-- Admin Registration Form (NEW) -->
+        <!-- Admin Registration Form -->
         <div class="form-box admin-register">
             <h2>Admin Registration</h2>
             <form id="adminRegisterForm">
@@ -254,8 +276,7 @@
         </div>
     </div>    
 
-    <div class="notification" id="notification" style="display: none;"></div>
+     <div class="notification" id="notification" style="display: none;"></div>
     <script src="login.js"></script>
-
 </body>
 </html>

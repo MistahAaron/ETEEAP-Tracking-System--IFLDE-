@@ -1,3 +1,6 @@
+
+
+
 * {
   margin: 0;
   padding: 0;
@@ -153,7 +156,6 @@ header {
   padding: 20px 0;
 }
 
-
 .wrapper.active-popup {
   transform: scale(1);
   transition: 0.7s ease-in-out;
@@ -170,7 +172,6 @@ header {
   padding: 20px 40px;
   transition: all 0.3s ease;
 }
-
 
 /* Login Form */
 .wrapper .form-box.login {
@@ -295,9 +296,8 @@ header {
 
 .wrapper .form-box.forgot .btn {
   width: 100%;
-  max-width: 250
+  max-width: 250px;
 }
-
 
 /* Close Icon */
 .wrapper .icon-close {
@@ -364,7 +364,7 @@ input::-ms-clear {
 
 .input-box label {
   position: absolute;
-  top: -15px; /* Start above the input */
+  top: -15px;
   left: 5px;
   font-size: 1em;
   color: #fff;
@@ -386,7 +386,6 @@ input::-ms-clear {
   color: #532989;
   font-weight: 600;
 }
-
 
 .input-box input:not(:placeholder-shown) ~ label {
   top: -20px;
@@ -694,6 +693,68 @@ input::-ms-clear {
   transform: translateX(-400px);
   opacity: 0;
 }
+/* [All previous CSS remains exactly the same until the OTP Verification Styles] */
+
+/* OTP Verification Styles */
+.wrapper .form-box.otp-verification {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.wrapper.active-otp .form-box.otp-verification {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.wrapper.active-otp .form-box.login {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.otp-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 30px 0;
+}
+
+.otp-input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    background: transparent;
+    color: #fff;
+}
+
+.otp-input:focus {
+    border-color: #532989;
+    outline: none;
+}
+
+.resend-otp {
+    font-size: 0.9rem;
+    color: #fff;
+    text-align: center;
+    margin: 15px 0;
+}
+
+.resend-otp a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.resend-otp a:hover {
+    color: #532989;
+}
+
+/* [All remaining CSS stays exactly the same] */
 
 /* Notification */
 .notification {
@@ -835,6 +896,5 @@ input::-ms-clear {
 input:-webkit-autofill {
   background-color: transparent !important;
   -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
-  -webkit-text-fill-color: #fff !important; /* or your text color */
+  -webkit-text-fill-color: #fff !important;
 }
-

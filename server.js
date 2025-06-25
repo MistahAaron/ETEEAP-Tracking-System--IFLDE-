@@ -11,6 +11,8 @@ const multer = require('multer');
 const fs = require("fs");
 const { GridFSBucket, ObjectId } = require('mongodb');
 const conn = mongoose.connection;
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = 3000;
@@ -28,6 +30,18 @@ app.use(bodyParser.json());
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
+
+// Email transporter configuration
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'your-email@gmail.com',
+        pass: 'your-app-password' // Use App Password from Google Account
+    }
+});
+
+// Store OTPs temporarily
+const otpStore = {};
 
 // MongoDB Connection
 mongoose.connect("mongodb://127.0.0.1:27017/Eteeap", {
@@ -486,6 +500,72 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
+
+
+// OTP Routes
+app.post('/api/send-otp', async (req, res) => {
+    const { email } = req.body;
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const token = crypto.randomBytes(32).toString('hex');
+    
+    otpStore[token] = {
+        otp,
+        email,
+        expires: Date.now() + 300000 // 5 minutes expiry
+    };
+
+    try {
+        await transporter.sendMail({
+            from: 'your-email@gmail.com',
+            to: email,
+            subject: 'Your OTP for Registration',
+            text: `Your OTP code is: ${otp}`,
+            html: `<p>Your OTP code is: <strong>${otp}</strong></p>`
+        });
+
+        res.json({ 
+            success: true,
+            verificationToken: token
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Failed to send OTP'
+        });
+    }
+});
+
+app.post('/api/verify-otp', (req, res) => {
+    const { otp, token, email } = req.body;
+    const storedData = otpStore[token];
+
+    if (!storedData || storedData.email !== email) {
+        return res.status(400).json({ 
+            success: false,
+            message: 'Invalid verification request'
+        });
+    }
+
+    if (Date.now() > storedData.expires) {
+        delete otpStore[token];
+        return res.status(400).json({ 
+            success: false,
+            message: 'OTP has expired'
+        });
+    }
+
+    if (storedData.otp !== otp) {
+        return res.status(400).json({ 
+            success: false,
+            message: 'Invalid OTP'
+        });
+    }
+
+    // OTP is valid
+    delete otpStore[token];
+    res.json({ success: true });
+});
 // ======================
 // APPLICANT ROUTES
 // ======================
@@ -2344,6 +2424,7 @@ app.use((err, req, res, next) => {
         details: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
 });
+
 
 
 // Start Server
