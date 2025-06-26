@@ -1,31 +1,46 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("followupForm");
-  const confirmation = document.getElementById("confirmation");
+// followup.js
+(() => {
+  document.addEventListener("DOMContentLoaded", () => {
 
-  form.addEventListener("submit", async e => {
-    e.preventDefault();
-
-    const name = form.fullName.value.trim();
-    const email = form.email.value.trim();
-    const message = form.message.value.trim();
-
-    if (!name || !email || !message) return;
-
-    // Build FormData (for actual upload)
-    const data = new FormData();
-    data.append("name", name);
-    data.append("email", email);
-    data.append("message", message);
-    // append all selected files
-    Array.from(form.attachments.files).forEach((file, i) => {
-      data.append(`file_${i}`, file);
+    // --- DROPDOWN TOGGLE ---
+    document.querySelectorAll(".dropdown-toggle").forEach(toggle => {
+      toggle.addEventListener("click", e => {
+        e.preventDefault();
+        const parent = toggle.closest(".dropdown");
+        parent?.classList.toggle("active");
+      });
+    });
+    document.addEventListener("click", e => {
+      if (!e.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown.active")
+          .forEach(drop => drop.classList.remove("active"));
+      }
     });
 
-    // Simulate upload…
-    // await fetch("/api/followup", { method: "POST", body: data });
+    // --- FORM HANDLER & CONFIRMATION ---
+    const form = document.getElementById("followupForm");
+    const confirmation = document.getElementById("confirmation");
+    form?.addEventListener("submit", e => {
+      e.preventDefault();
+      const name    = document.getElementById("fullName").value.trim();
+      const email   = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+      if (!name || !email || !message) return;
+      form.reset();
+      confirmation.classList.add("show");
+      setTimeout(() => confirmation.classList.remove("show"), 4000);
+    });
 
-    form.reset();
-    confirmation.classList.add("show");
-    setTimeout(() => confirmation.classList.remove("show"), 4000);
+    // --- LOGOUT REDIRECT ---
+    const logoutLink = document.getElementById("logout");
+    if (logoutLink) {
+      logoutLink.addEventListener("click", e => {
+        e.preventDefault();
+        // adjust path if login.html is in a different folder
+        window.location.href = "../login/login.html";
+      });
+    } else {
+      console.warn("Logout link (#logout) not found");
+    }
   });
-});
+})();

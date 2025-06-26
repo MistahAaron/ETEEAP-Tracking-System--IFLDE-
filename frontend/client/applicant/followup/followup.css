@@ -1,17 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-
-:root {
-  --default: #212121;
-  --sec-color: #8b5ec5;
-  --main-color: #532989;
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+
+/* Colors */
+:root {
+  --default: #212121;
+  --sec-color: #8b5ec5;
+  --main-color: #532989;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to top, var(--main-color), #dfd9ece5),
+    url("../img/background.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
 /* Navigation */
 header {
   width: 100%;
@@ -100,6 +110,11 @@ header {
   color: var(--sec-color);
 }
 
+.separator {
+  width: 2px;
+  background-color: var(--main-color);
+}
+
 .icon a {
   color: var(--main-color);
   font-size: 24px;
@@ -163,6 +178,7 @@ header {
   display: block;
 }
 
+
 body {
   background: linear-gradient(to top, var(--main-color), #dfd9ece5),
               url("../img/background.jpg") no-repeat center center fixed;
@@ -172,7 +188,7 @@ body {
 
 /* Main Container */
 .followup-container {
-  max-width: 700px;
+  width: 700px;
   margin: auto;
   background-color: #ffffffee;
   padding: 40px;
@@ -183,7 +199,7 @@ body {
 }
 
 .form-title {
-  font-size: 2rem;
+  font-size: 2.3rem;
   color: var(--main-color);
   margin-bottom: 20px;
   text-align: center;
@@ -213,7 +229,6 @@ body {
 
 /* Push the Send Message button to the right */
 .followup-form button {
-  /* existing styles… */
   background-color: var(--main-color);
   color: white;
   padding: 12px 20px;
