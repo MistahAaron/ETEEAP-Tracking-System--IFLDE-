@@ -1,0 +1,329 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+:root {
+  --default: #212121;
+  --sec-color: #8b5ec5;
+  --main-color: #532989;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+/* Navigation */
+header {
+  width: 100%;
+  background-color: #dfd9ec;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.logo1 {
+  width: 55px;
+}
+
+.logo2 {
+  width: 60px;
+}
+
+.logo-text-container {
+  text-align: left;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  color: #002ab4;
+}
+
+.logo-subtext {
+  font-size: 0.9rem;
+  color: var(--main-color);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  flex-grow: 1;
+}
+
+.nav ul {
+  list-style-type: none;
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  justify-content: center;
+}
+
+.nav ul li {
+  display: inline;
+  position: relative;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.nav ul li a {
+  color: var(--main-color);
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 10px;
+  position: relative;
+  height: auto;
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: color 0.3s ease-in-out;
+  transition: all 0.3s ease; /* Add smooth transition */
+}
+
+.nav ul li a:hover {
+  color: var(--sec-color);
+}
+
+.icon a {
+  color: var(--main-color);
+  font-size: 24px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+}
+
+/* Dropdown Styles */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  width: 200px;
+  padding: 10px 0;
+  z-index: 100;
+  top: 40px;
+  text-align: center;
+  color: var(--main-color);
+}
+
+/* Dropdown Arrow */
+.dropdown-content::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  right: 15px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+}
+
+/* Profile Dropdown Specific Styling */
+.profile-dropdown {
+  width: 150px;
+}
+
+/* Dropdown Links */
+.dropdown-content a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  text-decoration: none;
+}
+
+.dropdown-content a:hover {
+  color: inherit !important;
+  background-color: #f1f1f1;
+}
+
+/* Show dropdown when active */
+.dropdown.active .dropdown-content {
+  display: block;
+}
+
+body {
+  background: linear-gradient(to top, var(--main-color), #dfd9ece5),
+              url("../img/background.jpg") no-repeat center center fixed;
+  background-size: cover;
+  padding-top: 100px;
+}
+
+/* Main Container */
+.followup-container {
+  max-width: 700px;
+  margin: auto;
+  background-color: #ffffffee;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(83, 41, 137, 0.2);
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.form-title {
+  font-size: 2rem;
+  color: var(--main-color);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Form Style */
+.followup-form label {
+  display: block;
+  margin-top: 20px;
+  font-weight: 600;
+  color: var(--main-color);
+}
+
+.followup-form input,
+.followup-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.followup-form textarea {
+  resize: vertical;
+}
+
+/* Push the Send Message button to the right */
+.followup-form button {
+  /* existing styles… */
+  background-color: var(--main-color);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: block;
+  margin-left: auto;
+}
+
+.followup-form button:hover {
+  background-color: var(--sec-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .followup-container {
+    margin: 30px 20px;
+    padding: 20px;
+  }
+
+  .form-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-out;
+}
+
+/* Style the file input to blend with your form */
+.followup-form input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  background-color: #fafafa;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* Show selected filenames */
+.followup-form input[type="file"]::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.followup-form input[type="file"]::before {
+  content: "Choose files";
+  display: inline-block;
+  background: var(--main-color);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.followup-form input[type="file"]:hover::before {
+  background: var(--sec-color);
+}
+
+/* 1) Hidden by default */
+#confirmation {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  max-width: 300px;
+  padding: 15px 20px;
+  background-color: #e0d7f9;
+  color: var(--main-color);
+  border: 2px solid var(--main-color);
+  border-radius: 8px;
+  font-weight: bold;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: none;              /* <- hide by default */
+}
+
+/* 2) Slide-in animation */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 3) When .show is present, display and animate */
+#confirmation.show {
+  display: flex;              /* <- only now it becomes visible */
+  animation: slideInRight 0.4s ease-out both;
+}
