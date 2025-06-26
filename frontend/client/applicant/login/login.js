@@ -66,6 +66,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // forgot password link handler here
+    document.querySelector(".forgot-link")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        // Hide all other forms
+        document.querySelectorAll('.form-box').forEach(form => {
+            form.style.display = 'none';
+        });
+        // Show forgot password form
+        document.querySelector('.forgot').style.display = 'block';
+        wrapper.classList.add('active-forgot');
+    });
+
+
     // Terms and conditions handling
     document.getElementById("terms-link")?.addEventListener("click", function(event) {
         event.preventDefault();
