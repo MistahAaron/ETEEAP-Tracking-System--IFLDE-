@@ -1,6 +1,11 @@
 // DOM Elements
 const loadingSpinner = document.getElementById("loadingSpinner");
 const allStudentsTableBody = document.getElementById("allStudentsTableBody");
+const prevPageBtn = document.getElementById("prevPage");
+const nextPageBtn = document.getElementById("nextPage");
+const pageInfo = document.getElementById("pageInfo");
+let currentPage = 1;
+const applicantsPerPage = 20;
 
 // Store applicants data globally for sorting
 let applicants = [];
@@ -73,17 +78,20 @@ function updateTotalApplicantsCounter(count) {
 }
 
 // Render applicants data in the table
-function renderApplicantsTable(applicants) {
+function renderApplicantsTable(applicantsToRender) {
   if (!allStudentsTableBody) return;
   
   allStudentsTableBody.innerHTML = '';
   
-  if (applicants.length === 0) {
+  if (applicantsToRender.length === 0) {
     renderEmptyState();
     return;
   }
   
-  applicants.forEach(applicant => {
+  // Get the paginated subset of applicants
+  const paginatedApplicants = getPaginatedApplicants(applicantsToRender);
+  
+  paginatedApplicants.forEach(applicant => {
     const row = document.createElement('tr');
     
     const appDate = new Date(applicant.applicationDate);
@@ -118,7 +126,8 @@ function renderApplicantsTable(applicants) {
     
     allStudentsTableBody.appendChild(row);
   });
-  
+
+  updatePaginationControls();
   addActionButtonListeners();
 }
 
@@ -176,6 +185,7 @@ function renderEmptyState() {
 }
 
 // Add event listeners to action buttons
+
 function addActionButtonListeners() {
   const viewButtons = document.querySelectorAll('.view-btn');
   const rejectButtons = document.querySelectorAll('.reject-btn');
@@ -200,11 +210,49 @@ function initializeEventListeners() {
   initializeDropdown();
   initializeLogout();
   initializeSortDropdown();
+
+  prevPageBtn.addEventListener("click", goToPreviousPage);
+  nextPageBtn.addEventListener("click", goToNextPage);
   
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
     searchInput.addEventListener('input', debounce(handleSearch, 300));
   }
+}
+
+// new pagination functions
+function goToPreviousPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    renderApplicantsTable(applicants);
+    updatePaginationControls();
+  }
+}
+
+function goToNextPage() {
+  const totalPages = Math.ceil(applicants.length / applicantsPerPage);
+  if (currentPage < totalPages) {
+    currentPage++;
+    renderApplicantsTable(applicants);
+    updatePaginationControls();
+  }
+}
+
+function updatePaginationControls() {
+  const totalPages = Math.ceil(applicants.length / applicantsPerPage);
+  
+  // Update page info
+  pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+  
+  // Update button states
+  prevPageBtn.disabled = currentPage === 1;
+  nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+}
+
+function getPaginatedApplicants(applicantsToPaginate) {
+  const startIndex = (currentPage - 1) * applicantsPerPage;
+  const endIndex = startIndex + applicantsPerPage;
+  return applicantsToPaginate.slice(startIndex, endIndex);
 }
 
 function initializeSortDropdown() {
@@ -235,7 +283,6 @@ function handleSort(sortType) {
   if (!applicants || applicants.length === 0) return;
 
   let sortedApplicants = [...applicants];
-
   switch (sortType) {
     case 'name-asc':
       sortedApplicants.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
@@ -272,7 +319,7 @@ function handleSort(sortType) {
     default:
       break;
   }
-
+  currentPage = 1;
   renderApplicantsTable(sortedApplicants);
   
   let sortMessage = '';
@@ -297,6 +344,7 @@ async function handleSearch(e) {
   const searchTerm = e.target.value.trim().toLowerCase();
   
   if (!searchTerm) {
+    currentPage = 1; // Reset to first page when clearing search
     await fetchApplicants();
     return;
   }
