@@ -424,7 +424,7 @@ input::-ms-clear {
 }
 
 /* Forgot Password Link */
-.forgot {
+.forgot-link {
   font-size: 1rem;
   color: #532989;
   font-weight: 500;
@@ -433,13 +433,13 @@ input::-ms-clear {
   justify-content: flex-end;
 }
 
-.forgot a {
+.forgot-password a {
   color: #fff;
   text-decoration: none;
   font-weight: bold;
 }
 
-.forgot a:hover {
+.forgot-password a:hover {
   color: #532989;
 }
 

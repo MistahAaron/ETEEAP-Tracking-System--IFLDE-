@@ -368,6 +368,7 @@ function updateUserDisplay(user) {
   }
 }
 
+
 async function handleLogout() {
   showLoading();
   try {

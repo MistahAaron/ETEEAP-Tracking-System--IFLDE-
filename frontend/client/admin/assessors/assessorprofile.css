@@ -701,13 +701,13 @@ body {
 }
 
 .sort-option:hover {
-  background-color: #f8fafc;
+  background-color: #4dde57;
   color: var(--primary-color);
 }
 
 .sort-divider {
   height: 1px;
-  background-color: #e2e8f0;
+  background-color: #76256b;
   margin: 5px 0;
 }
 
