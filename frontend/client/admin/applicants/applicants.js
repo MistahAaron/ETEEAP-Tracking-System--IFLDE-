@@ -9,6 +9,7 @@ const applicantsPerPage = 20;
 
 // Store applicants data globally for sorting
 let applicants = [];
+let filteredApplicants = [];
 
 // Initialize the dashboard
 document.addEventListener("DOMContentLoaded", async () => {
@@ -32,8 +33,8 @@ async function fetchApplicants() {
     const data = await response.json();
     
     if (data.success && data.data) {
-      // Store applicants locally for search and sorting
       applicants = data.data;
+      filteredApplicants = [...applicants]; 
       
       // Log all status values for debugging
       console.log('All status values:', [...new Set(applicants.map(app => app.status))]);
@@ -44,7 +45,7 @@ async function fetchApplicants() {
       // Update the counter in the dashboard if it exists on this page
       updateTotalApplicantsCounter(applicants.length);
       
-      renderApplicantsTable(applicants);
+      renderApplicantsTable(filteredApplicants);
     } else {
       showNotification('No applicants found', 'info');
       sessionStorage.setItem('totalApplicants', '0');
@@ -87,9 +88,12 @@ function renderApplicantsTable(applicantsToRender) {
     renderEmptyState();
     return;
   }
+
+  // Filtered applicants globally
+  filteredApplicants = applicantsToRender;
   
   // Get the paginated subset of applicants
-  const paginatedApplicants = getPaginatedApplicants(applicantsToRender);
+  const paginatedApplicants = getPaginatedApplicants(filteredApplicants);
   
   paginatedApplicants.forEach(applicant => {
     const row = document.createElement('tr');
@@ -224,22 +228,22 @@ function initializeEventListeners() {
 function goToPreviousPage() {
   if (currentPage > 1) {
     currentPage--;
-    renderApplicantsTable(applicants);
+    renderApplicantsTable(filteredApplicants); // Use filteredApplicants
     updatePaginationControls();
   }
 }
 
 function goToNextPage() {
-  const totalPages = Math.ceil(applicants.length / applicantsPerPage);
+  const totalPages = Math.ceil(filteredApplicants.length / applicantsPerPage);
   if (currentPage < totalPages) {
     currentPage++;
-    renderApplicantsTable(applicants);
+    renderApplicantsTable(filteredApplicants); // Use filteredApplicants
     updatePaginationControls();
   }
 }
 
 function updatePaginationControls() {
-  const totalPages = Math.ceil(applicants.length / applicantsPerPage);
+  const totalPages = Math.ceil(filteredApplicants.length / applicantsPerPage);
   
   // Update page info
   pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
@@ -343,9 +347,9 @@ function handleSort(sortType) {
 async function handleSearch(e) {
   const searchTerm = e.target.value.trim().toLowerCase();
   
-  if (!searchTerm) {
+   if (!searchTerm) {
     currentPage = 1; // Reset to first page when clearing search
-    await fetchApplicants();
+    renderApplicantsTable(applicants); // Show all applicants
     return;
   }
 
@@ -356,6 +360,9 @@ async function handleSearch(e) {
       (applicant.applicantId && applicant.applicantId.toLowerCase().includes(searchTerm)) ||
       (applicant.course && applicant.course.toLowerCase().includes(searchTerm))
     );
+    
+    currentPage = 1; // Reset to first page for new search results
+    renderApplicantsTable(localResults);
     
     if (localResults.length > 0) {
       renderApplicantsTable(localResults);
