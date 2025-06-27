@@ -1,9 +1,12 @@
-// Admin Assessor Profile Controller - Complete Fixed Version with Working Export Feature
+// Admin Assessor Profile Controller - Complete Fixed Version with Working Export Feature and Pagination
 const API_BASE_URL = "http://localhost:3000";
 let currentAssessor = null;
 
-// Store applicants data globally for sorting
+// Store applicants data globally for sorting and pagination
 let assignedApplicants = [];
+let filteredApplicants = [];
+let currentPage = 1;
+const applicantsPerPage = 10;
 
 // DOM Elements
 const elements = {
@@ -19,7 +22,10 @@ const elements = {
     usernameElement: document.querySelector('.username'),
     userAvatar: document.querySelector('.user-avatar'),
     exportApplicantsBtn: document.getElementById('export-applicants-btn'),
-    searchApplicantsInput: document.getElementById('searchApplicantsInput')
+    searchApplicantsInput: document.getElementById('searchApplicantsInput'),
+    prevPageBtn: document.getElementById('prevPage'),
+    nextPageBtn: document.getElementById('nextPage'),
+    pageInfo: document.getElementById('pageInfo')
 };
 
 // Utility Functions
@@ -112,8 +118,15 @@ const profileDisplay = {
                     <p>No applicants currently assigned to this assessor</p>
                 </div>
             `;
+            updatePaginationControls(0);
             return;
         }
+        
+        // Store filtered applicants
+        filteredApplicants = applicants;
+        
+        // Get paginated subset
+        const paginatedApplicants = getPaginatedApplicants(filteredApplicants);
         
         const table = document.createElement('table');
         table.innerHTML = `
@@ -132,7 +145,7 @@ const profileDisplay = {
         
         const tbody = table.querySelector('tbody');
         
-        applicants.forEach(applicant => {
+        paginatedApplicants.forEach(applicant => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${applicant.applicantId || 'N/A'}</td>
@@ -154,8 +167,39 @@ const profileDisplay = {
         });
         
         container.appendChild(table);
+        updatePaginationControls(filteredApplicants.length);
     }
 };
+
+// Pagination Functions
+function getPaginatedApplicants(applicantsToPaginate) {
+    const startIndex = (currentPage - 1) * applicantsPerPage;
+    const endIndex = startIndex + applicantsPerPage;
+    return applicantsToPaginate.slice(startIndex, endIndex);
+}
+
+function updatePaginationControls(totalItems) {
+    const totalPages = Math.ceil(totalItems / applicantsPerPage);
+    elements.pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+    
+    elements.prevPageBtn.disabled = currentPage === 1;
+    elements.nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+}
+
+function goToPreviousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        profileDisplay.updateAssignedApplicants(filteredApplicants);
+    }
+}
+
+function goToNextPage() {
+    const totalPages = Math.ceil(filteredApplicants.length / applicantsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        profileDisplay.updateAssignedApplicants(filteredApplicants);
+    }
+}
 
 // API Functions
 const api = {
@@ -203,7 +247,11 @@ const api = {
                     };
                 });
                 
-                profileDisplay.updateAssignedApplicants(assignedApplicants);
+                // Initialize filtered applicants with all applicants
+                filteredApplicants = [...assignedApplicants];
+                
+                // Render with pagination
+                profileDisplay.updateAssignedApplicants(filteredApplicants);
                 return true;
             }
             throw new Error(data.error || 'Failed to load assessor data');
@@ -275,6 +323,9 @@ const api = {
 function handleApplicantSearch(e) {
     const searchTerm = e.target.value.trim().toLowerCase();
     
+    // Reset to first page when searching
+    currentPage = 1;
+    
     if (!searchTerm) {
         profileDisplay.updateAssignedApplicants(assignedApplicants);
         return;
@@ -292,6 +343,9 @@ function handleApplicantSearch(e) {
 function handleApplicantSort(sortType) {
     if (!assignedApplicants || assignedApplicants.length === 0) return;
 
+    // Reset to first page when sorting
+    currentPage = 1;
+    
     let sortedApplicants = [...assignedApplicants];
 
     switch (sortType) {
@@ -493,26 +547,19 @@ const navigation = {
 // Export Functions
 const exportFunctions = {
     exportAssignedApplicants: () => {
-        if (!currentAssessor || !currentAssessor.assignedApplicants || currentAssessor.assignedApplicants.length === 0) {
+        if (!filteredApplicants || filteredApplicants.length === 0) {
             utils.showNotification('No applicants to export', 'info');
             return;
         }
 
         try {
-            // Prepare the data for export
-            const exportData = currentAssessor.assignedApplicants.map(applicant => {
-                const applicantData = applicant.applicantId || {};
-                const isPopulatedApplicant = applicantData && applicantData._id;
-                
+            // Prepare the data for export using filteredApplicants
+            const exportData = filteredApplicants.map(applicant => {
                 return {
-                    'Applicant ID': isPopulatedApplicant ? 
-                        applicantData.applicantId : 
-                        (applicant.applicantId && typeof applicant.applicantId === 'string' ? applicant.applicantId : 'N/A'),
-                    'Full Name': applicantData.personalInfo ? 
-                        `${applicantData.personalInfo.lastname || ''}, ${applicantData.personalInfo.firstname || ''}`.trim() : 
-                        applicant.fullName || 'No name provided',
-                    'Course': applicantData.personalInfo?.firstPriorityCourse || applicant.course || 'Not specified',
-                    'Status': applicantData.status || applicant.status || 'Under Assessment',
+                    'Applicant ID': applicant.applicantId || 'N/A',
+                    'Full Name': applicant.name || 'No name provided',
+                    'Course': applicant.course || 'Not specified',
+                    'Status': applicant.status || 'Under Assessment',
                     'Date Assigned': utils.formatDate(applicant.dateAssigned) || 'N/A'
                 };
             });
@@ -585,6 +632,15 @@ const setupEventListeners = () => {
                 sortOptions.style.display = 'none';
             });
         });
+    }
+    
+    // Pagination buttons
+    if (elements.prevPageBtn) {
+        elements.prevPageBtn.addEventListener('click', goToPreviousPage);
+    }
+    
+    if (elements.nextPageBtn) {
+        elements.nextPageBtn.addEventListener('click', goToNextPage);
     }
     
     // Initialize admin UI components
