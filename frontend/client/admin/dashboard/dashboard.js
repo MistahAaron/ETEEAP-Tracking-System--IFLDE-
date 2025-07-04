@@ -146,6 +146,16 @@ function updateTableTitle() {
   document.getElementById('currentFilterTitle').textContent = titleMap[currentFilter] || 'Recent Applicants';
 }
 
+
+function normalizeStatus(status) {
+  if (!status) return 'status-unknown';
+  const s = status.trim().toLowerCase();
+  if (s.includes('pass')) return 'status-evaluated-passed';
+  if (s.includes('fail')) return 'status-evaluated-failed';
+  return `status-${s.replace(/\s+/g, '-')}`;
+}
+
+
 // Render applicants table
 function renderApplicantsTable(applicantsToRender) {
   if (!studentTableBody) return;
@@ -176,7 +186,9 @@ function renderApplicantsTable(applicantsToRender) {
       <td>${escapeHtml(applicant.name || "No name")}</td>
       <td>${escapeHtml(applicant.course || "Not specified")}</td>
       <td>
-        <span class="status-badge status-${statusClass}">
+        <span class="status-badge ${normalizeStatus(applicant.status)}">
+
+        
           ${formatStatus(applicant.status)}
         </span>
       </td>

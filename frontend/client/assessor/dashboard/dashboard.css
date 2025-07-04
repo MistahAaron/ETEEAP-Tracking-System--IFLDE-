@@ -334,12 +334,37 @@
             background-color: #f8fafc;
         }
 
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 500;
-        }
+      .status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  text-align: center;
+  min-width: 100px;
+}
+.status-under-assessment {
+  background-color: #e8ff95; /* Light blue background */
+  color: #495a0a; /* Dark blue text */
+}
+
+/* Evaluated - Passed Status */
+.status-evaluated-passed { /* Adding both variants for consistency */
+  background-color: #cafddc !important; /* Light green background */
+  color: #085827 !important; /* Dark green text */
+}
+
+/* Evaluated - Failed Status */
+.status-evaluated-failed { /* Adding both variants for consistency */
+  background-color: #fdb7b7 !important; /* Light red background */
+  color: #3e0000 !important; /* Dark red text */
+}
+
+
+.status-pending-review {
+  background-color: #fef3c7;
+  color: #92400e;
+}
 
         .status-active {
             background-color: #dcfce7;

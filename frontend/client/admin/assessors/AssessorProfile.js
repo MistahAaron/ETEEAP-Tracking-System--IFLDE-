@@ -152,7 +152,8 @@ const profileDisplay = {
                 <td>${utils.escapeHtml(applicant.name || applicant.fullName)}</td>
                 <td>${applicant.course || 'N/A'}</td>
                 <td>
-                    <span class="status-badge status-${(applicant.status || '').toLowerCase().replace(/\s+/g, '-')}">
+                    <span class="status-badge ${normalizeStatus(applicant.status)}">
+
                         ${utils.capitalizeFirstLetter(applicant.status) || 'N/A'}
                     </span>
                 </td>
@@ -171,6 +172,14 @@ const profileDisplay = {
     }
 };
 
+
+function normalizeStatus(status) {
+  if (!status) return 'status-unknown';
+  const s = status.trim().toLowerCase();
+  if (s.includes('pass')) return 'status-evaluated-passed';
+  if (s.includes('fail')) return 'status-evaluated-failed';
+  return `status-${s.replace(/\s+/g, '-')}`;
+}
 // Pagination Functions
 function getPaginatedApplicants(applicantsToPaginate) {
     const startIndex = (currentPage - 1) * applicantsPerPage;
@@ -225,29 +234,38 @@ const api = {
                 currentAssessor = data.data;
                 profileDisplay.update(currentAssessor);
                 
-                // Process assigned applicants data
-                assignedApplicants = currentAssessor.assignedApplicants.map(app => {
+                // Process assigned applicants data - UPDATED TO HANDLE UNIQUE APPLICANTS
+                const uniqueApplicants = new Map();
+                
+                currentAssessor.assignedApplicants.forEach(app => {
                     const applicant = app.applicantId || {};
                     const isPopulatedApplicant = applicant && applicant._id;
+                    const applicantId = isPopulatedApplicant ? applicant._id : app._id || app.applicantId;
                     
-                    return {
-                        _id: isPopulatedApplicant ? applicant._id : app._id || app.applicantId,
-                        applicantId: isPopulatedApplicant ? 
-                            applicant.applicantId : 
-                            (app.applicantId && typeof app.applicantId === 'string' ? app.applicantId : 'N/A'),
-                        name: applicant.personalInfo ? 
-                            `${applicant.personalInfo.lastname || ''}, ${applicant.personalInfo.firstname || ''}`.trim() : 
-                            app.fullName || 'No name provided',
-                        fullName: applicant.personalInfo ? 
-                            `${applicant.personalInfo.firstname || ''} ${applicant.personalInfo.lastname || ''}`.trim() : 
-                            app.fullName || 'No name provided',
-                        course: applicant.personalInfo?.firstPriorityCourse || app.course || 'Not specified',
-                        status: applicant.status || app.status || 'Under Assessment',
-                        dateAssigned: app.dateAssigned || new Date()
-                    };
+                    // Only add if not already in the map (ensures uniqueness)
+                    if (!uniqueApplicants.has(applicantId)) {
+                        uniqueApplicants.set(applicantId, {
+                            _id: applicantId,
+                            applicantId: isPopulatedApplicant ? 
+                                applicant.applicantId : 
+                                (app.applicantId && typeof app.applicantId === 'string' ? app.applicantId : 'N/A'),
+                            name: applicant.personalInfo ? 
+                                `${applicant.personalInfo.lastname || ''}, ${applicant.personalInfo.firstname || ''}`.trim() : 
+                                app.fullName || 'No name provided',
+                            fullName: applicant.personalInfo ? 
+                                `${applicant.personalInfo.firstname || ''} ${applicant.personalInfo.lastname || ''}`.trim() : 
+                                app.fullName || 'No name provided',
+                            course: applicant.personalInfo?.firstPriorityCourse || app.course || 'Not specified',
+                            status: applicant.status || app.status || 'Under Assessment',
+                            dateAssigned: app.dateAssigned || new Date()
+                        });
+                    }
                 });
                 
-                // Initialize filtered applicants with all applicants
+                // Convert map values to array
+                assignedApplicants = Array.from(uniqueApplicants.values());
+                
+                // Initialize filtered applicants with all unique applicants
                 filteredApplicants = [...assignedApplicants];
                 
                 // Render with pagination
@@ -553,16 +571,24 @@ const exportFunctions = {
         }
 
         try {
-            // Prepare the data for export using filteredApplicants
-            const exportData = filteredApplicants.map(applicant => {
-                return {
-                    'Applicant ID': applicant.applicantId || 'N/A',
-                    'Full Name': applicant.name || 'No name provided',
-                    'Course': applicant.course || 'Not specified',
-                    'Status': applicant.status || 'Under Assessment',
-                    'Date Assigned': utils.formatDate(applicant.dateAssigned) || 'N/A'
-                };
+            // Create a map to ensure uniqueness in the export
+            const uniqueExportData = new Map();
+            
+            filteredApplicants.forEach(applicant => {
+                // Use applicant ID as the key to ensure uniqueness
+                if (!uniqueExportData.has(applicant._id)) {
+                    uniqueExportData.set(applicant._id, {
+                        'Applicant ID': applicant.applicantId || 'N/A',
+                        'Full Name': applicant.name || 'No name provided',
+                        'Course': applicant.course || 'Not specified',
+                        'Status': applicant.status || 'Under Assessment',
+                        'Date Assigned': utils.formatDate(applicant.dateAssigned) || 'N/A'
+                    });
+                }
             });
+
+            // Convert to array for export
+            const exportData = Array.from(uniqueExportData.values());
 
             // Create worksheet
             const ws = XLSX.utils.json_to_sheet(exportData);
@@ -574,7 +600,7 @@ const exportFunctions = {
             // Export the file
             XLSX.writeFile(wb, `Assigned_Applicants_${currentAssessor.assessorId || 'Export'}_${new Date().toISOString().slice(0,10)}.xlsx`);
             
-            utils.showNotification('Export successful!', 'success');
+            utils.showNotification('Export successful! Unique applicants exported.', 'success');
         } catch (error) {
             console.error('Export error:', error);
             utils.showNotification(`Export failed: ${error.message}`, 'error');

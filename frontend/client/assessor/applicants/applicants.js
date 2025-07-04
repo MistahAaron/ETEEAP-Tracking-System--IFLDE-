@@ -1,4 +1,3 @@
-// ApplicantList.js - Updated to match AssessorDashboard functionality
 
 const API_BASE_URL = "http://localhost:3000";
 let applicants = [];

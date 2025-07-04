@@ -78,6 +78,14 @@ function updateTotalApplicantsCounter(count) {
   sessionStorage.setItem('totalApplicants', count);
 }
 
+function normalizeStatus(status) {
+  if (!status) return 'status-unknown';
+  const s = status.trim().toLowerCase();
+  if (s.includes('pass')) return 'status-evaluated-passed';
+  if (s.includes('fail')) return 'status-evaluated-failed';
+  return `status-${s.replace(/\s+/g, '-')}`;
+}
+
 // Render applicants data in the table
 function renderApplicantsTable(applicantsToRender) {
   if (!allStudentsTableBody) return;
@@ -112,7 +120,8 @@ function renderApplicantsTable(applicantsToRender) {
       <td>${formattedDate}</td>
       <td>${applicant.currentScore || 0}</td>
       <td>
-        <span class="status-badge status-${applicant.status.toLowerCase().replace(/\s+/g, '-')}">
+        <span class="status-badge ${normalizeStatus(applicant.status)}">
+        
           ${applicant.status}
         </span>
       </td>

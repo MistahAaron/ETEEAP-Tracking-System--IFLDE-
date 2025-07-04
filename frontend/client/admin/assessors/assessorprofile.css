@@ -322,11 +322,35 @@ body {
 
 /* Status Badges */
 .status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  text-align: center;
+  min-width: 100px;
+}
+.status-under-assessment {
+  background-color: #e8ff95; /* Light blue background */
+  color: #495a0a; /* Dark blue text */
+}
+
+/* Evaluated - Passed Status */
+.status-evaluated-passed { /* Adding both variants for consistency */
+  background-color: #cafddc !important; /* Light green background */
+  color: #085827 !important; /* Dark green text */
+}
+
+/* Evaluated - Failed Status */
+.status-evaluated-failed { /* Adding both variants for consistency */
+  background-color: #fdb7b7 !important; /* Light red background */
+  color: #3e0000 !important; /* Dark red text */
+}
+
+
+.status-pending-review {
+  background-color: #fef3c7;
+  color: #92400e;
 }
 
 .status-active {
@@ -334,9 +358,9 @@ body {
     color: #166534;
 }
 
-.status-pending {
-    background-color: #fef9c3;
-    color: #854d0e;
+.status-approved {
+  background-color: #fad1f4;
+  color: #a800ab;
 }
 
 /* Applicants Section */
