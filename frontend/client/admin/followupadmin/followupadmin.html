@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>rtu-eteeap-admin - Follow Ups</title>
     <link rel="icon" href="../../img/RTU Logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="followupadmin.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="followupadmin.css">
 </head>
 <body>
      <div class="container">
@@ -109,19 +109,74 @@
     <div id="followupsSection" class="section active">
         <div class="messaging-section">
             <div class="conversation-list">
-                <div class="conversation-header">Follow-Up</div>
-                <!-- Conversation items will be populated by backend -->
+                <div class="conversation-header">Follow-Up Messages</div>
+                <!-- Conversation items -->
+                <div class="conversation-item active">
+                    <div class="conversation-user">
+                        <span>Juan Dela Cruz</span>
+                        <span class="conversation-time">Today, 10:30 AM</span>
+                    </div>
+                    <div class="conversation-preview">Follow up on application status...</div>
+                    <div class="conversation-status">
+                        <span class="status-badge status-seen">Seen</span>
+                    </div>
+                </div>
+                <div class="conversation-item">
+                    <div class="conversation-user">
+                        <span>Maria Santos</span>
+                        <span class="conversation-time">Yesterday, 3:45 PM</span>
+                    </div>
+                    <div class="conversation-preview">Application follow up with documents...</div>
+                    <div class="conversation-status">
+                        <span class="status-badge status-pending">Pending</span>
+                    </div>
+                </div>
+                <div class="conversation-item">
+                    <div class="conversation-user">
+                        <span>Robert Johnson</span>
+                        <span class="conversation-time">Yesterday, 11:20 AM</span>
+                    </div>
+                    <div class="conversation-preview">Follow up on evaluation progress...</div>
+                    <div class="conversation-status">
+                        <span class="status-badge status-seen">Seen</span>
+                    </div>
+                </div>
+                <div class="conversation-item">
+                    <div class="conversation-user">
+                        <span>Sarah Lim</span>
+                        <span class="conversation-time">Jul 12, 2:15 PM</span>
+                    </div>
+                    <div class="conversation-preview">Additional documents submitted...</div>
+                    <div class="conversation-status">
+                        <span class="status-badge status-seen">Seen</span>
+                    </div>
+                </div>
+                <div class="conversation-item">
+                    <div class="conversation-user">
+                        <span>Michael Tan</span>
+                        <span class="conversation-time">Jul 11, 9:30 AM</span>
+                    </div>
+                    <div class="conversation-preview">Follow up inquiry with certificates...</div>
+                    <div class="conversation-status">
+                        <span class="status-badge status-pending">Pending</span>
+                    </div>
+                </div>
             </div>
             
             <div class="message-area">
                 <div class="message-header">
-                    <span id="applicantInfo">Select a conversation</span>
-                    <button class="view-files-button" id="viewFilesButton">
-                        <i class="fas fa-file-alt"></i> View Submitted Files
-                    </button>
+                    <span id="applicantInfo">Juan Dela Cruz - BS Computer Science (APP-2023-001)</span>
+                    <div class="message-actions">
+                        <button class="action-button mark-resolved">
+                            <i class="fas fa-check-circle"></i> Mark as Resolved
+                        </button>
+                        <button class="view-files-button" id="viewFilesButton">
+                            <i class="fas fa-file-alt"></i> View Submitted Files
+                        </button>
+                    </div>
                 </div>
                 
-                <!-- Files Panel (initially hidden) -->
+                <!-- Files Panel -->
                 <div class="files-panel" id="filesPanel">
                     <div class="files-header">
                         <h3>Submitted Documents</h3>
@@ -130,19 +185,51 @@
                         </button>
                     </div>
                     <div class="files-list" id="filesList">
-                        <!-- Files will be populated by backend -->
+                        <div class="file-item">
+                            <i class="fas fa-file-pdf"></i>
+                            <div class="file-info">
+                                <div class="file-name">Transcript of Records.pdf</div>
+                                <div class="file-date">Uploaded: May 15, 2023</div>
+                            </div>
+                            <button class="download-file">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                        <div class="file-item">
+                            <i class="fas fa-file-image"></i>
+                            <div class="file-info">
+                                <div class="file-name">Work Certificate.jpg</div>
+                                <div class="file-date">Uploaded: May 16, 2023</div>
+                            </div>
+                            <button class="download-file">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                        <div class="file-item">
+                            <i class="fas fa-file-word"></i>
+                            <div class="file-info">
+                                <div class="file-name">Personal Statement.docx</div>
+                                <div class="file-date">Uploaded: May 17, 2023</div>
+                            </div>
+                            <button class="download-file">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="messages-container" id="messagesContainer">
-                    <!-- Messages will be populated by backend -->
-                </div>
-                
-                <div class="message-input-area">
-                    <textarea class="message-input" placeholder="Admin view only - replies disabled" id="messageInput" readonly></textarea>
-                    <button class="send-button" id="sendButton" disabled>
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                    <div class="message received">
+                        <div class="message-content">
+                            Hello, I would like to follow up my application. Here is all the submitted documents.
+                        </div>
+                        <div class="message-time">Today, 10:30 AM</div>
+                    </div>
+                    
+                    <div class="message-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Admin view only - To respond, please contact the applicant through official channels</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -153,6 +240,5 @@
     </div>
     
     <div class="notification" id="notification"></div>
-
-    </body>
+</body>
 </html>

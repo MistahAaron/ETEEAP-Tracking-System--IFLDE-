@@ -96,7 +96,7 @@ function renderApplicantsTable(applicantsToRender) {
   const paginatedApplicants = getPaginatedApplicants(filteredApplicants);
   
   paginatedApplicants.forEach(applicant => {
-    const row = document.createElement('tr');
+    const row = document.createElement("tr");
     
     const appDate = new Date(applicant.applicationDate);
     const formattedDate = appDate.toLocaleDateString('en-US', {
@@ -189,7 +189,6 @@ function renderEmptyState() {
 }
 
 // Add event listeners to action buttons
-
 function addActionButtonListeners() {
   const viewButtons = document.querySelectorAll('.view-btn');
   const rejectButtons = document.querySelectorAll('.reject-btn');
@@ -224,7 +223,7 @@ function initializeEventListeners() {
   }
 }
 
-// new pagination functions
+// Pagination functions
 function goToPreviousPage() {
   if (currentPage > 1) {
     currentPage--;
@@ -554,28 +553,58 @@ function showNotification(message, type = "info") {
   }, 3000);
 }
 
-// Export functionality
+// Export functionality - Updated to export all filtered data
 document.addEventListener("DOMContentLoaded", function() {
   const exportBtn = document.getElementById("export-btn");
   
   if (exportBtn) {
     exportBtn.addEventListener("click", function() {
-      const table = document.querySelector("#studentsSection table");
-      const clonedTable = table.cloneNode(true);
+      // Create a new table element for export
+      const exportTable = document.createElement("table");
       
-      const rows = clonedTable.querySelectorAll("tr");
-      rows.forEach((row) => {
-        if (row.lastElementChild) {
-          row.removeChild(row.lastElementChild);
-        }
+      // Create header row
+      const headerRow = exportTable.insertRow();
+      const headers = ["Applicant ID", "Name", "Course", "Application Date", "Current Score", "Status"];
+      
+      headers.forEach(headerText => {
+        const th = document.createElement("th");
+        th.textContent = headerText;
+        headerRow.appendChild(th);
       });
       
-      const ws = XLSX.utils.table_to_sheet(clonedTable);
+      // Add all filtered applicants (not just paginated ones)
+      filteredApplicants.forEach(applicant => {
+        const row = exportTable.insertRow();
+        
+        const appDate = new Date(applicant.applicationDate);
+        const formattedDate = appDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+        
+        const cells = [
+          applicant.applicantId || 'N/A',
+          applicant.name || 'No name provided',
+          applicant.course || 'Not specified',
+          formattedDate,
+          applicant.currentScore || 0,
+          applicant.status
+        ];
+        
+        cells.forEach(cellData => {
+          const cell = row.insertCell();
+          cell.textContent = cellData;
+        });
+      });
+      
+      // Convert to Excel
+      const ws = XLSX.utils.table_to_sheet(exportTable);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Applicants");
       XLSX.writeFile(wb, "applicants.xlsx");
       
-      showNotification("Export successful!", "success");
+      showNotification("Export successful! All filtered data exported.", "success");
     });
   }
 });
