@@ -12,9 +12,11 @@ body {
         linear-gradient(to top, rgba(83, 41, 137, 0.9), rgba(223, 217, 236, 0.9)),
         url("../img/background.jpg") no-repeat center center fixed;
     background-size: cover;
-    background-attachment: scroll; /* Changed for mobile stability */
+    background-attachment: fixed;
     overflow-x: hidden;
     position: relative;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 
@@ -791,6 +793,9 @@ header {
     align-items: center;
 }
 
+
+
+
 /* Responsive Styles */
 @media (max-width: 768px) {
     .nav {
@@ -802,9 +807,10 @@ header {
     }
     
     /* Make header more compact */
-    header {
-        padding: 6px 10px;
-        min-height: 40px;
+      header {
+        padding: 8px 15px;
+        height: auto;
+        flex-wrap: wrap;
     }
     body {
         background-attachment: fixed;
@@ -816,14 +822,205 @@ header {
         -o-background-size: cover;
     }
 
+
+    .logo-container {
+        width: 100%;
+        justify-content: flex-start;
+        margin-bottom: 5px;
+    }
+    
+    .logo-text {
+        font-size: 0.9rem !important;
+        line-height: 1.1;
+    }
+    
+    .logo-subtext {
+        font-size: 0.6rem !important;
+    }
+    
+    .logo1, .logo2 {
+        width: 30px !important;
+    }
+    
+    /* Section 1 adjustments */
+    .sec-01 {
+        margin-top: 100px;
+    }
+    
+    .sec-01 .logo-title {
+        flex-direction: column;
+    }
+    
+    .sec-01 .rtu-logo {
+        width: 70px;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .sec-01 .title {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+    
+    .sec-01 .main-title {
+        font-size: 1.8rem;
+        line-height: 1.3;
+        margin-top: 20px;
+    }
+    
+    .sec-01 .content {
+        margin-top: 30px;
+        left: 0;
+        text-align: center;
+        padding: 0 15px;
+    }
+    
+    .sec-01 .subtext {
+        max-width: 100%;
+        font-size: 1rem;
+        margin: 10px auto;
+    }
+    
+    /* Section 2 adjustments */
+    .sec-02 .container {
+        flex-direction: column;
+        padding: 20px;
+    }
+    
+    .sec-02 .eteeap-logo {
+        max-width: 250px;
+        padding: 15px;
+    }
+    
+    .sec-02 .content {
+        padding: 20px;
+        max-width: 100%;
+    }
+    
+    .sec-02 h2 {
+        font-size: 2rem;
+        text-align: center;
+    }
+    
+    .sec-02 p {
+        font-size: 1rem;
+        text-align: justify;
+    }
+    
+    /* Section 3 adjustments */
+    .sec-03 .container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .sec-03 .card {
+        width: 90%;
+        max-width: 350px;
+        height: 300px;
+    }
+    
+    .sec-03 .card:hover {
+        height: 400px;
+    }
+    
+    .sec-03 .card .imgBx {
+        width: 250px;
+        height: 200px;
+    }
+    
+    .sec-03 .title {
+        font-size: 1.8rem;
+    }
+    
+    .sec-03 .subtitle {
+        font-size: 1rem;
+        margin-bottom: 40px;
+        padding: 0 15px;
+    }
+    
+    /* FAQ section adjustments */
+    .sec-04 .container {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .slide-card {
+        width: 90% !important;
+        margin: 10px 0;
+        height: auto;
+    }
+    
+    input:checked + label {
+        width: 90% !important;
+        height: auto;
+    }
+    
+    .sec-04 .faqs {
+        font-size: 2rem;
+    }
+    
+    /* Footer adjustments */
+    .footer .row {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footer-col {
+        width: 100%;
+        padding: 0 15px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .footer-col h4::before {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .logo-left, .logo-right {
+        margin: 15px 0;
+    }
+
+    
       @supports (-webkit-touch-callout: none) {
         body {
-            background-attachment: scroll;
-            position: fixed;
-            height: 100%;
-            width: 100%;
-            top: 0;
-            left: 0;
+        
+        background-attachment: scroll;
+        background-size: cover;
+        background-position: center;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
         }
+}
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    .sec-01 .main-title {
+        font-size: 1.5rem;
+    }
+    
+    .sec-01 .text {
+        font-size: 1.2rem;
+    }
+    
+    .sec-02 h2 {
+        font-size: 1.8rem;
+    }
+    
+    .sec-03 .title {
+        font-size: 1.5rem;
+    }
+    
+    .sec-04 .faqs {
+        font-size: 1.8rem;
     }
 }
+
+
+    
