@@ -957,28 +957,54 @@ a {
     }
     
     /* FAQ section adjustments */
+
+    
+    .sec-04 {
+        margin-top: 60px; /* Reduced margin for mobile */
+    }
+    
     .sec-04 .container {
-        width: 100%;
-        height: auto;
-        flex-direction: column;
-        align-items: center;
+        height: 400px; /* Reduced height */
+        padding: 0 10px; /* Added side padding */
     }
     
     .slide-card {
-        width: 90% !important;
-        margin: 8px 0;
-        height: auto;
+        width: 60px; /* Narrower collapsed state */
+        margin: 0 4px; /* Reduced gap between cards */
     }
     
-    input:checked + label {
-        width: 90% !important;
-        height: auto;
+    input:checked + label.slide-card {
+        width: 300px; /* Narrower expanded state */
+        min-width: 300px;
     }
     
-    .sec-04 .faqs {
-        font-size: 1.8rem;
+    .text-bx {
+        width: calc(100% - 20px);
+        left: 10px;
     }
     
+    .text-bx h4 {
+        font-size: 1.3rem; /* Slightly smaller heading */
+        padding-bottom: 4px;
+    }
+    
+    .text-bx h5 {
+        font-size: 0.95rem;
+        padding: 4px 0 0 15px;
+    }
+    
+    .text-bx p {
+        font-size: 0.8rem;
+        padding: 3px 0 0 5px;
+        line-height: 1.2;
+    }
+    
+    .slide-card > .row > .icon {
+        width: 35px;
+        height: 35px;
+        margin: 8px;
+    }
+
     /* Footer adjustments */
     .footer .row {
         flex-direction: column;
@@ -1134,17 +1160,30 @@ a {
         font-size: 0.8rem;
     }
     
-    .sec-04 .faqs {
-        font-size: 1.5rem;
+    .sec-04 .container {
+        height: 380px;
     }
     
-   .logo-left img, 
-    .logo-right img {
-        max-width: 100px; /* Even smaller logos */
+    input:checked + label.slide-card {
+        width: 260px;
+        min-width: 260px;
     }
-
-    .footer-col h4 {
-        font-size: 0.9rem;
+    
+    .text-bx h4 {
+        font-size: 1.1rem;
+    }
+    
+    .text-bx h5 {
+        font-size: 0.85rem;
+        padding-left: 10px;
+    }
+    
+    .text-bx p {
+        font-size: 0.75rem;
+    }
+    
+    .slide-card {
+        width: 50px;
     }
 
     .footer-col p, 
