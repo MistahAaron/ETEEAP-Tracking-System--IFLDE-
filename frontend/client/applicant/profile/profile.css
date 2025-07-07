@@ -483,3 +483,109 @@ body {
 .notification.info {
   background-color: #2196f3;
 }
+
+@media (max-width: 768px) {
+   /* Header adjustments */
+  header {
+    padding: 2px 12px;
+  }
+
+  .logo1 {
+    width: 28px;
+    margin-left: 10px;
+  }
+
+  .logo2 {
+    width: 32px;
+  }
+
+  .logo-text-container {
+    display: none;
+  }
+
+  /* NAVIGATION */
+  .nav {
+    gap: 6px;
+  }
+
+  .nav ul {
+    gap: 6px;
+  }
+
+  .nav ul li {
+    margin-right: 0;
+  }
+
+  /* Hide nav link text except profile dropdown */
+  .nav ul li:not(.dropdown) a span {
+    display: none;
+  }
+
+  .nav ul li:not(.dropdown) a {
+    font-size: 0;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav ul li:not(.dropdown) a i,
+  .nav ul li:not(.dropdown) a ion-icon {
+    font-size: 16px;
+    display: inline-block;
+  }
+
+  /* Profile image */
+  .nav-profile-pic {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  #nav-profile-name {
+    display: none;
+  }
+
+  /* Keep profile dropdown content readable */
+  .dropdown-content {
+    width: 140px;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-content a {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .dropdown-content a i {
+    font-size: 16px;
+  }
+
+  /* Container spacing below fixed header */
+  .container {
+    margin-top: 120px;
+    padding: 20px;
+    width: 92%;
+  }
+
+  /* Profile section stack */
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .edit-profile-button {
+    position: static;
+    margin-top: 10px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

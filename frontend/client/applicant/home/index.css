@@ -197,11 +197,13 @@ header {
 
 .sec-01 .content {
     position: relative;
-    margin-top: 50px;
     bottom: -90%;
     left: 5%;
-    text-align: left;
+    position: relative;
+    margin: 0 auto;
+    text-align: center;
 }
+
 
 .sec-01 .text {
     font-size: 1.2rem;
@@ -214,9 +216,9 @@ header {
     font-size: 1rem;
     color: #532989;
     font-weight: 500;
-    margin: 8px;
     max-width: 35%;
     line-height: 1.2;
+    margin: 10px auto;
 }
 
 .sec-01 .apply-now-btn {
@@ -792,8 +794,59 @@ a {
     font-weight: 600;
 }
 
+
+
 /* Responsive Styles */
 @media (max-width: 768px) {
+
+      header {
+       position: sticky;
+        top: 0;
+        padding: 10px 15px;
+        height: 70px; /* Fixed header height */
+        z-index: 1000;
+    }
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+
+     /* Logo container adjustments */
+    .logo-container {
+        flex: 1;
+        min-width: 0;
+        gap: 8px;
+    }
+
+    .logo1, .logo2 {
+        width: 30px !important;
+        height: auto;
+    }
+
+    .logo-text-container {
+        overflow: hidden; /* Prevents text overflow */
+    }
+
+    .logo-text {
+        font-size: 0.9rem !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.1;
+    }
+
+    .logo-subtext {
+        font-size: 0.6rem !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.1;
+    }
+
+    
+
     .nav {
         display: none;
     }
@@ -803,17 +856,66 @@ a {
         align-items: center;
         gap: 12px;
     }
-    header {
-        padding: 6px 12px;
-        height: auto;
-        flex-wrap: wrap;
+    /* Hamburger button styling */
+    .mobile-menu-btn {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+    }
+    .mobile-nav-container {
+        position: relative;
+        z-index: 1001;
     }
 
-       .header-container {
-        flex-wrap: nowrap;
+        .mobile-nav {
+        position: absolute;
+        top: 45px; /* Positions directly below the hamburger */
+        right: 0; /* Aligns with left edge of hamburger */
+        width: 160px; /* Slightly wider for better touch */
+        margin-top: 0;
+        border-radius: 0 0 8px 8px;
+    }
+      .mobile-nav.active {
+        max-height: 220px;
+    }
+     .mobile-login {
+        background: transparent;
+        border: 1.5px solid #532989;
+        color: #532989;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+     .hamburger-icon {
+        width: 20px;
+        height: 2px;
+        background: #532989;
+        position: relative;
+    }
+
+    .hamburger-icon::before,
+    .hamburger-icon::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 2px;
+        background: #532989;
+        left: 0;
+    }
+
+    .hamburger-icon::before {
+        top: -6px;
+    }
+
+    .hamburger-icon::after {
+        top: 6px;
     }
     
-    body {
+    .body {
         background-attachment: fixed;
         background-size: cover;
         background-position: center;
@@ -823,30 +925,6 @@ a {
         -o-background-size: cover;
     }
 
-    .logo-container {
-        width: 100%;
-        justify-content: flex-start;
-        margin-bottom: 4px;
-          flex: 1;
-        min-width: 0; /* Allows text truncation if needed */
-    }
-    
-    .logo-text {
-        font-size: 0.8rem !important;
-        line-height: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    .logo-subtext {
-        font-size: 0.55rem !important;
-    }
-    
-    .logo1, .logo2 {
-        width: 25px !important;
-    }
-    
     /* Section 1 adjustments */
     .sec-01 {
         margin-top: 90px;
@@ -922,44 +1000,73 @@ a {
     
     /* Section 3 adjustments */
      .sec-03 {
-        display: flex !important; /* Ensure section is displayed */
         margin-top: 60px;
-        padding: 0 15px; /* Add padding to prevent edge crowding */
-        width: 100%;
-        overflow: visible; /* Ensure content isn't hidden */
+        padding: 0 15px;
     }
-
+    
     .sec-03 .container {
-        display: flex !important;
         flex-direction: column;
-        width: 100%;
-        max-width: 100%;
-        gap: 30px;
-        padding: 15px 0; /* Add vertical padding */
+        gap: 60px;
     }
-
+    
+    .sec-03 .title {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+    
+    .sec-03 .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 40px;
+    }
+    
     .sec-03 .card {
+        width: 280px;
+        height: 260px;
+    }
+    
+    .sec-03 .card:hover {
+        height: 360px;
+    }
+    
+    .sec-03 .card .imgBx {
+        width: 220px;
+        height: 180px;
+    }
+    
+    .sec-03 .card:hover .imgBx {
+        top: -90px;
+    }
+    
+    .sec-03 .card .content {
+        top: 200px;
+    }
+    
+    .sec-03 .card:hover .content {
+        top: 70px;
+        height: 280px;
+    }
+    
+    .sec-03 .card .content h2 {
+        font-size: 1.1rem;
+        padding: 0 0 10px;
+    }
+    
+    .sec-03 .card .content p {
+        font-size: 0.8rem;
+        padding: 3px 0;
+    }
+    
+    /* Adjust logo sizes */
+    .ics-logo {
         width: 100%;
-        max-width: 320px;
-        min-height: 280px;
-        margin: 0 auto; /* Center cards */
+        height: 100%;
     }
-
-    /* Ensure logos are visible */
-    .sec-03 .imgBx {
-        position: relative;
-        width: 100%;
-        height: auto;
-        overflow: visible;
+    
+    .cbea-logo,
+    .cas-logo {
+        width: 60%;
     }
-
-    /* Make sure content is visible */
-    .sec-03 .content {
-        position: relative;
-        visibility: visible !important;
-        opacity: 1 !important;
-        height: auto !important;
-    }
+    
     
     /* FAQ section adjustments */
 
@@ -1110,103 +1217,191 @@ a {
 }
 
 /* For very small screens */
-@media (max-width: 480px) {
+@media (max-width: 300px) {
+    header {
+        padding: 8px 10px;
+        height: 60px;
+    }
+
+    .logo1, .logo2 {
+        width: 25px !important;
+    }
+
+    .logo-text {
+        font-size: 0.8rem !important;
+    }
+
+    .logo-subtext {
+        font-size: 0.5rem !important;
+    }
+
+    .mobile-nav {
+        width: 120px;
+        top: 40px;
+    }
+
+    .mobile-nav a {
+        font-size: 0.65rem;
+    }
+
+    .mobile-login {
+        padding: 3px 6px;
+        font-size: 0.6rem;
+    }
+
+    .hamburger-icon,
+    .hamburger-icon::before,
+    .hamburger-icon::after {
+        width: 16px;
+    }
+
+     body {
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Section 1 */
+
+     .sec-01 .content {
+        left: 0 !important;
+        width: 100% !important;
+        padding: 0 10px !important;
+        text-align: center !important;
+    }
+    .sec-01 .subtext {
+        max-width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .sec-01 .logo-title {
+        flex-direction: column;
+        align-items: center;
+    }
+    .sec-01 {
+        margin-top: 80px;
+    }
+
+    .sec-01 .rtu-logo {
+        width: 50px;
+    }
+
+    .sec-01 .title {
+        font-size: 1.1rem;
+    }
+
     .sec-01 .main-title {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
-    
+
     .sec-01 .text {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
-    
+
+    .sec-01 .subtext {
+        font-size: 0.8rem;
+    }
+
+    .sec-01 .apply-now-btn {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+
+    /* Section 2 */
     .sec-02 .eteeap-logo {
         max-width: 120px;
     }
-    
+
     .sec-02 h2 {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
-    
+
     .sec-02 p {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
-    
-    .sec-03 {
-        margin-top: 40px;
-    }
-    
+
+    /* Section 3 */
     .sec-03 .card {
-        max-width: 280px;
-        min-height: 250px;
+        width: 240px;
+        height: 220px;
     }
-    
-    .sec-03 .title {
-        font-size: 1.5rem;
-        padding: 0 10px;
+
+    .sec-03 .card:hover {
+        height: 320px;
     }
-    
-    .sec-03 .subtitle {
-        font-size: 0.9rem;
-        padding: 0 10px;
+
+    .sec-03 .card .imgBx {
+        width: 180px;
+        height: 150px;
     }
-    
-    /* Further reduce logo sizes */
-    .ics-logo, 
-    .cbea-logo,
-    .cas-logo {
-        max-width: 150px;
+
+    .sec-03 .card .content {
+        top: 170px;
     }
-    
+
     .sec-03 .card .content h2 {
         font-size: 1rem;
     }
-    
+
     .sec-03 .card .content p {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
     }
-    
+
+    /* FAQ Section */
+    .sec-04 .faqs {
+        font-size: 1.5rem;
+    }
+
     .sec-04 .container {
-        height: 380px;
+        height: 350px;
     }
-    
+
     input:checked + label.slide-card {
         width: 260px;
         min-width: 260px;
     }
-    
+
     .text-bx h4 {
         font-size: 1.1rem;
     }
-    
+
     .text-bx h5 {
         font-size: 0.85rem;
         padding-left: 10px;
     }
-    
-    .text-bx p {
-        font-size: 0.75rem;
-    }
-    
-    .slide-card {
-        width: 50px;
-    }
 
-    .footer-col p, 
-    .footer-col a, 
-    .footer-col ul li a {
-        font-size: 0.75rem;
-    }
-    
-    .mobile-nav {
-        width: 120px;
-    }
-    
-    .mobile-nav a {
+    .text-bx p {
         font-size: 0.7rem;
     }
-    
-    .mobile-login {
-        font-size: 0.6rem;
-        padding: 2px 4px;
+
+    /* Section 5 */
+    .sec-05 h3 {
+        font-size: 1.2rem;
+    }
+
+    .sec-05 p {
+        font-size: 0.8rem;
+    }
+
+    /* Footer */
+    .footer-col h4 {
+        font-size: 0.9rem;
+    }
+
+    .footer-col p,
+    .footer-col a,
+    .footer-col ul li a {
+        font-size: 0.7rem;
+    }
+
+    .logo-left img,
+    .logo-right img {
+        max-width: 100px;
+    }
+
+    .copyrightText {
+        font-size: 0.7rem;
     }
 }
+
+     
