@@ -21,40 +21,38 @@ body {
 
 /* Navigation */
 header {
-       width: 100%;
-    background-color: #dfd9ec;
-    padding: 10px 20px;
+    width: 100%;
+    background-color: #DFD9EC;
+    padding: 15px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: fixed;
     top: 0;
     z-index: 999;
-    filter: drop-shadow(1px 1px 10px rgb(221, 206, 247));
 }
 
 
+
 .header-container {
-    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: nowrap; /* ✅ Prevents wrapping */
 }
 
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
 }
 
 .logo1 {
-    width: 35px;
-    height: auto;
+    width: 55px;
 }
 
 .logo2 {
-    width: 40px;
-    height: auto;
+    width: 60px;
 }
 
 .logo-text-container {
@@ -62,45 +60,52 @@ header {
 }
 
 .logo-text {
-    font-size: 0.95rem;
-    line-height: 1.1;
+    font-size: 1.5rem;
+    font-weight: bold;
     margin: 0;
-    color: #002ab4;
+    color: #002AB4;
 }
 
 .logo-subtext {
-    font-size: 0.6rem;
+    font-size: 0.9rem;
     color: #532989;
 }
 
 .nav {
     display: flex;
     align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
 
 .nav ul {
- display: flex;
-    list-style: none;
-    gap: 20px;
-    align-items: center;
+    list-style-type: none;
+    display: flex;
+    padding: 10px 0;
+    justify-content: center;
 }
 
 .nav ul li {
     display: inline;
     position: relative;
-    height: 40px;
+    height: 45px;
     display: flex;
     align-items: center;
-    margin-right: 30px;
+    margin-right: 40px;
 }
 
 .nav ul li a {
-  color: #532989;
+    color: #532989;
     text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 8px 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 10px;
     position: relative;
+    height: auto;
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .nav a:after {
@@ -108,7 +113,7 @@ header {
     position: absolute;
     background-color: #532989;
     border-radius: 5px;
-    height: 2px;
+    height: 3px;
     width: 100%;
     left: 0;
     bottom: 5px;
@@ -123,29 +128,29 @@ header {
 }
 
 .nav .btnLogin-popup {
-    width: 90px;
-    height: 40px;
+    width: 100px;
+    height: 45px;
     background: transparent;
-    border: 2px solid #532989;
+    border: 3px solid #532989;
     outline: none;
-    border-radius: 12px;
+    border-radius: 15px;
     cursor: pointer;
-    font-size: 0.95em;
+    font-size: 1.1em;
     color: #532989;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: 0.5s;
+    transition: .5s;
     margin-left: auto;
     margin-right: auto;
 }
 
 .nav .btnLogin-popup:hover {
     background: #532989;
-    color: #dfd9ec;
-    border: 2px solid #532989;
+    color: #DFD9EC;
 }
+
 
 .sec-01 {
     display: flex;
