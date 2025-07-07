@@ -204,3 +204,9 @@ document.getElementById('logout')?.addEventListener('click', async (e) => {
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', loadResults);
+
+const dropdown = document.querySelector('.dropdown');
+dropdown.addEventListener('click', () => {
+  dropdown.classList.toggle('active');
+});
+

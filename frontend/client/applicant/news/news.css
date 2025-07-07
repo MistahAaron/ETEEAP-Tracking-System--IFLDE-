@@ -11,7 +11,6 @@ body {
                 url('../img/background.jpg') no-repeat center center fixed;
     background-size: cover;
 }
-
 /* Navigation */
 header {
     width: 100%;
@@ -23,6 +22,15 @@ header {
     position: fixed;
     top: 0;
     z-index: 999;
+}
+
+
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap; /* ✅ Prevents wrapping */
 }
 
 .logo-container {
@@ -134,7 +142,6 @@ header {
     background: #532989;
     color: #DFD9EC;
 }
-
 /* Content */
 .container {
     display: flex;
@@ -645,28 +652,24 @@ header {
 }
 
 /* Desktop styles */
-@media screen and (min-width: 769px) {
+@media (min-width: 769px) {
     body {
         height: 100%;
     }
 
     /* Navigation */
-    header {
-        width: 100%;
-        background-color: #DFD9EC;
-        padding: 15px 40px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+ header {
         position: fixed;
-        top: 0;
-        z-index: 999;
+        padding: 15px 40px;
+        height: auto;
+        justify-content: space-between;
     }
 
     .logo-container {
-        display: flex;
+       display: flex;
         align-items: center;
         gap: 10px;
+        min-width: 300px;
     }
 
     .logo1 {
@@ -701,19 +704,22 @@ header {
     }
 
     .nav ul {
-        list-style-type: none;
+          list-style-type: none;
         display: flex;
-        padding: 10px 0;
-        justify-content: center;
+        padding: 0;
+        margin: 0;
+        justify-content: flex-end;
     }
 
     .nav ul li {
-        display: inline;
         position: relative;
         height: 45px;
         display: flex;
         align-items: center;
-        margin-right: 40px;
+        margin-right: 30px;
+    }
+    .nav ul li:last-child {
+        margin-right: 0;
     }
 
     .nav ul li a {
