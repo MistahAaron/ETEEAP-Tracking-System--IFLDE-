@@ -11,6 +11,8 @@ body {
                 url('../img/background.jpg') no-repeat center center fixed;
     background-size: cover;
 }
+
+
 /* Navigation */
 header {
     width: 100%;
@@ -142,6 +144,8 @@ header {
     background: #532989;
     color: #DFD9EC;
 }
+
+
 /* Content */
 .container {
     display: flex;
