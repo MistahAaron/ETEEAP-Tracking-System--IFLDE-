@@ -727,27 +727,45 @@ a {
     padding: 4px;
     z-index: 1001;
 }
+   .hamburger-icon {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: #532989;
+        position: relative;
+    }
 
-.hamburger-icon {
-    display: block;
-    width: 18px;
-    height: 2px;
-    background: #532989;
-    position: relative;
-}
+    .hamburger-icon::before,
+    .hamburger-icon::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 2px;
+        background: #532989;
+        left: 0;
+    }
 
-.hamburger-icon::before,
-.hamburger-icon::after {
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 2px;
-    background: #532989;
-}
+    .hamburger-icon::before {
+        top: -6px;
+    }
 
-.hamburger-icon::before { top: -4px; }
-.hamburger-icon::after { top: 4px; }
+    .hamburger-icon::after {
+        top: 6px;
+    }
 
+    .mobile-menu-btn.open .hamburger-icon {
+        background: transparent;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::before {
+        transform: rotate(45deg);
+        top: 0;
+    }
+
+    .mobile-menu-btn.open .hamburger-icon::after {
+        transform: rotate(-45deg);
+        top: 0;
+    }
 .mobile-nav {
     position: absolute;
     top: 35px;
@@ -1438,8 +1456,7 @@ input:checked + label .text-bx {
     
     .text-bx p {
         font-size: 10px;
-    }
-    
+    } 
     .slide-card > .row > .icon {
         width: 30px;
         height: 30px;

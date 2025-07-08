@@ -11,25 +11,36 @@
     <link rel="icon" type="image/x-icon" href="../img/RTU Logo.png">
 </head>
 <body>
-    <header>
+   <header>
+    <div class="header-container">
         <div class="logo-container">
-            <img src="../img/RTU Logo.png" class="logo1">
-            <img src="../img/IFLDE Logo.png" class="logo2">
+            <img src="../img/RTU Logo.png" class="logo1" alt="RTU Logo">
+            <img src="../img/IFLDE Logo.png" class="logo2" alt="IFLDE Logo">
             <div class="logo-text-container">
                 <h2 class="logo-text">Rizal Technological University</h2>
                 <p class="logo-subtext">Institute of Flexible Learning & Digital Education</p>
             </div>
         </div>
-        <nav class="nav">
-            <ul>
-                <li><a href="/index.html">Home</a></li>
-                <li><a href="../About/about.html">About Us</a></li>
-                <li><a href="../Downloads/downloads.html">Downloads</a></li>
-                <li><a href="../News/news.html">News</a></li>
-                <button class="btnLogin-popup">Login</button>
-            </ul>
-        </nav>
-    </header>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav-container">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileNav">
+                <span class="hamburger-icon"></span>
+            </button>
+            <button class="btnLogin-popup mobile-login" onclick="window.location.href='../login/login.html';">SIGN IN</button>
+            
+            <!-- Mobile Navigation Menu -->
+            <nav class="mobile-nav" id="mobileNav">
+                <ul>
+                    <li><a href="../../../../index.html">Home</a></li>
+                    <li><a href="../About/about.html">About Us</a></li>
+                    <li><a href="../Downloads/downloads.html">Downloads</a></li>
+                    <li><a href="../News/news.html">News</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+   </header>
 
     <div class="wrapper">
         <!-- Login Form with Role Selection at Top -->
