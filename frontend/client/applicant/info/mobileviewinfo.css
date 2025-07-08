@@ -1,0 +1,208 @@
+/* Mobile-specific styles (only activated below 768px) */
+@media only screen and (max-width: 768px) {
+    header {
+        padding: 10px 15px;
+    }
+    
+    .logo1 {
+        width: 40px;
+    }
+    
+    .logo2 {
+        width: 45px;
+    }
+    
+    .logo-text {
+        font-size: 1rem;
+    }
+    
+    .logo-subtext {
+        font-size: 0.7rem;
+    }
+    
+    .container {
+        width: 95%;
+        margin: 120px auto 30px;
+        padding: 15px;
+    }
+    
+    .rtu-logo {
+        width: 60px;
+    }
+    
+    .text h2 {
+        font-size: 1rem;
+    }
+    
+    .data-privacy h4 {
+        font-size: 0.9rem;
+    }
+    
+    .data-privacy p {
+        font-size: 0.8rem;
+    }
+    
+    hr {
+        margin: 15px 0;
+    }
+    
+    h2 {
+        margin-bottom: 15px;
+        font-size: 1rem;
+    }
+    
+    .name, .additional-info,
+    .birth-info, .contact-info,
+    .address, .additional-address {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .input {
+        min-width: 100%;
+    }
+    
+    .input.suffix, .input.age,
+    .input.zip-code, .input.gender,
+    .input.birth {
+        min-width: 100%;
+    }
+    
+    .document {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .submission {
+        flex-direction: column;
+        gap: 30px;
+        align-items: center;
+    }
+    
+    .upload, .file-container {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .upload {
+        height: auto;
+        min-height: 120px; /* Reduced from 200px */
+        padding: 15px;
+    }
+    .uploaded-files{
+        margin-bottom: 5rem;
+    }
+
+    .file-container {
+        height: 120px; /* Reduced from 200px */
+        min-height: 120px;
+        max-height: 120px;
+        width: 50rem;
+    }
+
+    .file-upload {
+        padding: 8px 15px;
+        font-size: 0.85rem;
+    }
+
+    /* Adjust the position of the "Initial Submission" label */
+    .initial-submission {
+        top: -12px;
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .initial-submission, .uploaded-files {
+        left: 50%;
+    }
+    
+    .submit {
+        justify-content: center;
+    }
+    
+    button {
+        width: 100%;
+        max-width: 200px;
+    }
+    .course {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .course .input {
+        margin-top: 0;
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .course .input label {
+        position: static;
+        background: transparent;
+        padding: 0 0 5px 0;
+        color: #555;
+        font-size: 0.9rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+        transform: none;
+        top: auto;
+        left: auto;
+    }
+
+    .course .input select {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.95rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background-color: white;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23532989'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 15px;
+    }
+    
+}
+
+/* Small mobile devices (portrait) */
+@media only screen and (max-width: 380px) {
+    .logo-text {
+        font-size: 0.9rem;
+    }
+    
+    .logo-subtext {
+        font-size: 0.6rem;
+    }
+
+     .upload {
+        min-height: 100px;
+    }
+    
+    .file-container {
+        height: 100px;
+        min-height: 100px;
+        max-height: 100px;
+    }
+    
+    .upload p, .file-name {
+        font-size: 0.8rem;
+    }
+    
+    .file-upload {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+     .course .input select {
+            padding: 10px;
+            font-size: 0.85rem;
+        }
+        
+        .course .input label {
+            font-size: 0.85rem;
+        }
+}
