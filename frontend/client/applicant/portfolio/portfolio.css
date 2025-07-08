@@ -658,4 +658,49 @@ h5 {
   .search-container {
     width: 100%;
   }
+  /* Fix file table layout for mobile */
+.file-table thead {
+  display: none; /* Hide table headers */
+}
+
+.file-table tbody,
+.file-table tr,
+.file-table td {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  box-sizing: border-box;
+}
+
+/* Add spacing between file entries */
+.file-table tr {
+  margin-bottom: 12px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Label each row's data */
+.file-table td::before {
+  content: attr(data-label);
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  color: var(--main-color);
+}
+
+/* Stack buttons properly */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.view-btn,
+.delete-btn {
+  font-size: 12px;
+  padding: 6px 10px;
+  flex: 1;
+  text-align: center;
+}
+
 }
