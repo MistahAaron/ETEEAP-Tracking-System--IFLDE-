@@ -192,32 +192,56 @@ header {
 
 /* Role Tabs */
 .role-tabs {
- display: flex;
-  justify-content: center;
-  margin-bottom: 40px !important;
-  margin-top: 10px;
-  gap: 10px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px;
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
 }
 
 .role-tab {
-  padding: 8px 15px;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  color: #fff;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
+    padding: 8px 15px;
+    background: transparent;
+    border: none;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
 }
 
 .role-tab.active {
-  border-bottom: 2px solid #532989;
-  color: #532989;
-  font-weight: 600;
+    background: #532989;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.role-tab:hover {
-  color: #532989;
+.role-tab:hover:not(.active) {
+    background: rgba(83, 41, 137, 0.3);
+    color: #fff;
+}
+
+
+/* Exit Icon for Forms */
+.exit-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5rem;
+    color: #532989;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.exit-icon:hover {
+    color: #8b5ec5;
+    transform: scale(1.1);
 }
 
 /* Login forms */
@@ -819,24 +843,6 @@ input::-ms-clear {
   gap: 6px;
   cursor: pointer;
 }
-
-.cancel-icon {
-  position: fixed;
-  top: -7px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  display: fixed;
-  color: #532989;
-  cursor: pointer;
-  z-index: 999;
-}
-
-.cancel-icon ion-icon {
-  pointer-events: none;
-}
-
 /* ===== MOBILE NAVIGATION ===== */
 .mobile-nav-container {
     display: none;

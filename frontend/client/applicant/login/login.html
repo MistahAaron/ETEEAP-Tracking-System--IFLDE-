@@ -43,6 +43,9 @@
    </header>
 
     <div class="wrapper">
+        <div class="exit-icon" onclick="window.location.href='../../../../index.html';">
+    <ion-icon name="close-circle"></ion-icon>
+</div>
         <!-- Login Form with Role Selection at Top -->
         <div class="form-box login">
             <h2>Login</h2>
@@ -83,6 +86,7 @@
             
             <!-- Admin Login Form -->
             <form id="adminLoginForm" class="login-form" data-role="admin">
+
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail"></ion-icon></span>
                     <input type="email" id="adminEmail" required>
@@ -150,9 +154,7 @@
                 <div class="terms">
                     <label><input type="checkbox" id="terms-checkbox"> I agree to the <a href="#" id="terms-link">terms & conditions</a></label>
                 </div>
-                <button class="cancel-icon" onclick="goBackToLogin()">
-                 <ion-icon name="close-circle"></ion-icon>
-                </button>
+            
                 <button type="submit" id="register-btn" class="btn">Register</button>
             </form>
         </div>
