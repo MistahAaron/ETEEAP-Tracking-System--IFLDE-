@@ -52,17 +52,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function updateTimeline(status) {
+   function updateTimeline(status) {
     const steps = document.querySelectorAll("#progress-bar li");
+    const timelineTitle = document.querySelector(".timeline");
+    const resultLink = document.getElementById("result-link");
 
     // Reset all steps
     steps.forEach((step) => {
       step.className = "step-todo";
+      step.style.display = ""; // Reset display property
     });
-
-    // Special handling for rejected/failed states
-    const timelineTitle = document.querySelector(".timeline");
-    const resultLink = document.getElementById("result-link");
 
     switch (status) {
       case "Pending Review":
@@ -89,29 +88,64 @@ document.addEventListener("DOMContentLoaded", function () {
 
       case "Evaluated - Failed":
         steps.forEach((step) => (step.className = "step-done"));
-        steps[4].className = "step-failed"; // Add special class for failed state
+        steps[4].className = "step-failed";
         timelineTitle.textContent = "Application Timeline (Not Passed)";
         resultLink.href = "result.html";
         resultLink.style.pointerEvents = "auto";
         resultLink.style.color = "";
         break;
 
-      case "Rejected":
-        steps[0].className = "step-done";
-        steps[1].className = "step-rejected"; // Special styling for rejection
-        steps[1].querySelector(".sub-text").textContent =
-          "Your application was rejected";
-        // Hide remaining steps
-        for (let i = 2; i < steps.length; i++) {
-          steps[i].style.display = "none";
-        }
-        timelineTitle.textContent = "Application Timeline (Rejected)";
-        break;
+        case "Rejected":
+      // Update first step (Application)
+      steps[0].className = "step-done";
+      
+      // Update second step (Approved -> Rejected)
+      steps[1].className = "step-rejected";
+      const rejectedStep = steps[1];
+      
+      // Clear existing content and rebuild with proper structure
+      rejectedStep.innerHTML = `
+        <span class="step-title">Rejected</span>
+        <p class="sub-text">Your application was rejected</p>
+      `;
+      
+      // Position the title above for even-numbered steps
+       const stepTitle = rejectedStep.querySelector('.step-title');
+      stepTitle.style.position = "absolute";
+      stepTitle.style.top = "-60px"; // Reduced from -90px
+      stepTitle.style.left = "50%";
+      stepTitle.style.transform = "translateX(-50%)";
+      stepTitle.style.color = "#f44336";
+      stepTitle.style.fontWeight = "bold";
+      
+      // Style the rejection message to appear below the indicator
+      const subText = rejectedStep.querySelector('.sub-text');
+      subText.style.position = "relative";
+      subText.style.top = "0";
+      subText.style.left = "0";
+      subText.style.transform = "none";
+      subText.style.marginTop = "10px";
+      subText.style.color = "#f44336";
+      subText.style.fontWeight = "bold";
+      subText.style.textAlign = "center";
+      
+      // Hide remaining steps
+      for (let i = 2; i < steps.length; i++) {
+        steps[i].style.display = "none";
+      }
+      
+      // Update timeline title
+      timelineTitle.textContent = "Application Timeline (Rejected)";
+      timelineTitle.style.color = "#f44336";
+      break;
 
-      default:
-        steps[0].className = "step-active";
-    }
+    default:
+      steps[0].className = "step-active";
   }
+}
+
+  // Disable scroll
+  document.body.style.overflow = 'hidden';
 
   fetchApplicantStatus();
 });
