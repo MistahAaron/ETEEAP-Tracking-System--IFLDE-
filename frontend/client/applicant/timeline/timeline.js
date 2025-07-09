@@ -112,29 +112,36 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
       
       // Position the title above for even-numbered steps
-       const stepTitle = rejectedStep.querySelector('.step-title');
-      stepTitle.style.position = "absolute";
-      stepTitle.style.top = "-60px"; // Reduced from -90px
-      stepTitle.style.left = "50%";
-      stepTitle.style.transform = "translateX(-50%)";
-      stepTitle.style.color = "#f44336";
-      stepTitle.style.fontWeight = "bold";
+       timelineTitle.textContent = "Application Timeline (Rejected)";
+      timelineTitle.style.color = "#f44336";
       
-      // Style the rejection message to appear below the indicator
-      const subText = rejectedStep.querySelector('.sub-text');
-      subText.style.position = "relative";
-      subText.style.top = "0";
-      subText.style.left = "0";
-      subText.style.transform = "none";
-      subText.style.marginTop = "10px";
-      subText.style.color = "#f44336";
-      subText.style.fontWeight = "bold";
-      subText.style.textAlign = "center";
-      
-      // Hide remaining steps
-      for (let i = 2; i < steps.length; i++) {
-        steps[i].style.display = "none";
+      // Add mobile-specific styles if needed
+      if (window.innerWidth <= 768) {
+        const rejectedContainer = steps[1].querySelector('.rejected-container');
+        rejectedContainer.style.display = 'flex';
+        rejectedContainer.style.flexDirection = 'column';
+        rejectedContainer.style.alignItems = 'center';
+        rejectedContainer.style.textAlign = 'center';
+        
+        const stepIndicator = steps[1].querySelector('.step-indicator');
+        stepIndicator.style.width = '30px';
+        stepIndicator.style.height = '30px';
+        stepIndicator.style.borderRadius = '50%';
+        stepIndicator.style.backgroundColor = '#f44336';
+        stepIndicator.style.display = 'flex';
+        stepIndicator.style.justifyContent = 'center';
+        stepIndicator.style.alignItems = 'center';
+        stepIndicator.style.color = 'white';
+        stepIndicator.style.fontWeight = 'bold';
+        stepIndicator.style.margin = '5px 0';
+        stepIndicator.textContent = '!';
+        
+        const rejectedMessage = steps[1].querySelector('.rejected-message');
+        rejectedMessage.style.color = '#f44336';
+        rejectedMessage.style.fontWeight = 'bold';
+        rejectedMessage.style.marginTop = '5px';
       }
+     
       
       // Update timeline title
       timelineTitle.textContent = "Application Timeline (Rejected)";
