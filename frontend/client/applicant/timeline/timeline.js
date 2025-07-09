@@ -86,14 +86,16 @@ document.addEventListener("DOMContentLoaded", function () {
         resultLink.style.color = "";
         break;
 
-      case "Evaluated - Failed":
-        steps.forEach((step) => (step.className = "step-done"));
-        steps[4].className = "step-failed";
-        timelineTitle.textContent = "Application Timeline (Not Passed)";
-        resultLink.href = "result.html";
-        resultLink.style.pointerEvents = "auto";
-        resultLink.style.color = "";
-        break;
+     case "Evaluated - Failed":
+  steps.forEach((step) => (step.className = "step-done"));
+
+  steps[4].className = "step-failed";
+  steps[4].querySelector(".step-title").textContent = "Failed";
+  steps[4].querySelector(".sub-text").innerHTML =
+    'View Application <a href="result.html">Results</a>';
+
+  timelineTitle.textContent = "Application Timeline (Not Passed)";
+  break;
 
         case "Rejected":
       // Update first step (Application)

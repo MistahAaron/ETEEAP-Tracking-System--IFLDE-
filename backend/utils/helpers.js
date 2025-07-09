@@ -16,7 +16,7 @@ async function getNextApplicantId() {
     { $inc: { seq: 1 } },
     { new: true, upsert: true }
   );
-  return `AST${counter.seq.toString().padStart(4, '0')}`;
+  return `APP${counter.seq.toString().padStart(4, '0')}`;
 }
 
 
