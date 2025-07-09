@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Position the title above for even-numbered steps
        const stepTitle = rejectedStep.querySelector('.step-title');
       stepTitle.style.position = "absolute";
-      stepTitle.style.top = "-60px"; // Reduced from -90px
+      stepTitle.style.top = "-25px"; // Reduced from -90px
       stepTitle.style.left = "50%";
       stepTitle.style.transform = "translateX(-50%)";
       stepTitle.style.color = "#f44336";
